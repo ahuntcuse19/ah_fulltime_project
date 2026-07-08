@@ -1,5 +1,6 @@
 import { Navigate, Outlet, Route, Routes } from 'react-router-dom'
 import { SurfaceProvider } from './surface/SurfaceContext'
+import { AnalyticsOverlay } from './components/analytics/AnalyticsOverlay'
 import { DEMO_TEAM_ID } from './data'
 import SmsEntryPage from './pages/SmsEntryPage'
 import TeamPage from './pages/TeamPage'
@@ -26,7 +27,9 @@ function KioskLayout() {
 
 export default function App() {
   return (
-    <Routes>
+    <>
+      <AnalyticsOverlay />
+      <Routes>
       <Route path="/" element={<SmsEntryPage />} />
       <Route element={<MobileLayout />}>
         <Route path="/m/team/:teamId" element={<TeamPage />} />
@@ -40,6 +43,7 @@ export default function App() {
       {/* Outside both surfaces: this route plays the school's own platform. */}
       <Route path="/give/:initiativeId" element={<MockGivingPage />} />
       <Route path="*" element={<Navigate to={`/m/team/${DEMO_TEAM_ID}`} replace />} />
-    </Routes>
+      </Routes>
+    </>
   )
 }
