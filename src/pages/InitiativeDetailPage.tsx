@@ -1,8 +1,88 @@
+import { Link, useParams } from 'react-router-dom'
+import { getInitiative, getEntity } from '../data'
+import { PlaceholderImage } from '../components/ui/PlaceholderImage'
+import { Badge } from '../components/ui/Badge'
+import { Card } from '../components/ui/Card'
+import { ProgressBar } from '../components/giving/ProgressBar'
+import { SocialProof } from '../components/giving/SocialProof'
+import { SupportCta } from '../components/giving/SupportCta'
+import { useTrackOnMount } from '../analytics/useTrackOnMount'
+
 export default function InitiativeDetailPage() {
+  const { initiativeId = '' } = useParams()
+  const initiative = getInitiative(initiativeId)
+  useTrackOnMount('initiative_view', { initiative_id: initiativeId })
+
+  if (!initiative) {
+    return (
+      <main className="mx-auto max-w-md p-6 text-center">
+        <p className="text-ink-500">This campaign isn’t available.</p>
+        <Link to="/" className="mt-2 inline-block font-semibold text-orange-600">
+          Back to start
+        </Link>
+      </main>
+    )
+  }
+
+  const entity = getEntity(initiative.linked_entity_id)
+  const isLiveCampaign = initiative.raised_amount !== undefined
+
   return (
-    <main className="mx-auto max-w-md p-6">
-      <h1 className="display-stat text-2xl text-navy-900">InitiativeDetailPage</h1>
-      <p className="mt-2 text-ink-500">Placeholder — built in a later milestone.</p>
-    </main>
+    <div className="min-h-dvh bg-paper sm:bg-paper-dim">
+      <main className="mx-auto max-w-md bg-paper pb-12 sm:min-h-dvh sm:shadow-card">
+        <div className="relative">
+          <PlaceholderImage seed={initiative.photoSeed} className="rounded-b-3xl" />
+          {entity && (
+            <Link
+              to={`/m/team/${entity.id}`}
+              className="absolute left-4 top-4 rounded-full bg-black/40 px-3 py-1.5 text-xs font-semibold text-white backdrop-blur-sm"
+            >
+              ← {entity.name}
+            </Link>
+          )}
+        </div>
+
+        <div className="space-y-5 px-5 pt-4">
+          <div>
+            <Badge tone={isLiveCampaign ? 'orange' : 'neutral'}>
+              {isLiveCampaign ? 'Live campaign' : 'Designated fund'}
+            </Badge>
+            <h1 className="display-stat mt-2 text-2xl font-bold leading-tight text-navy-900">
+              {initiative.title}
+            </h1>
+            <p className="mt-1 text-xs text-ink-500">
+              Run by Syracuse Athletics{entity ? ` · supports ${entity.name}` : ''}
+            </p>
+          </div>
+
+          <Card className="p-4">
+            <ProgressBar
+              goal={initiative.goal_amount}
+              raised={initiative.raised_amount}
+              donorCount={initiative.donor_count}
+              lastUpdated={initiative.last_updated}
+              size="lg"
+            />
+          </Card>
+
+          <p className="text-[15px] leading-relaxed text-ink-900">
+            {initiative.story}
+          </p>
+
+          <SocialProof
+            donorCount={initiative.donor_count}
+            fallbackText="Every gift is directed to this fund by Syracuse Athletics."
+          />
+
+          <div className="pt-1">
+            <SupportCta initiative={initiative} />
+            <p className="mt-2.5 text-center text-[11px] leading-relaxed text-ink-300">
+              Gifts are made on Syracuse’s giving platform. Rocket surfaces
+              the campaign — it never processes payments.
+            </p>
+          </div>
+        </div>
+      </main>
+    </div>
   )
 }
