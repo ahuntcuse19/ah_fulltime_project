@@ -1,12 +1,14 @@
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { getEntity, getInitiativesForEntity, demoAlum } from '../data'
 import { TeamHero } from '../components/recognition/TeamHero'
 import { RecordsList } from '../components/recognition/RecordsList'
 import { RosterList } from '../components/recognition/RosterList'
+import { InitiativeModule } from '../components/giving/InitiativeModule'
 import { useTrackOnMount } from '../analytics/useTrackOnMount'
 
 export default function TeamPage() {
   const { teamId = '' } = useParams()
+  const navigate = useNavigate()
   const entity = getEntity(teamId)
   useTrackOnMount('team_view', { entity_id: teamId })
 
@@ -34,12 +36,24 @@ export default function TeamPage() {
             roster={entity.roster}
             highlightName={isDemoAlumsTeam ? demoAlum.name : undefined}
           />
-          {/* Giving module lands here in milestone 3 */}
           {teamInitiatives.length > 0 && (
-            <p className="px-5 text-xs text-ink-300">
-              {teamInitiatives.length} linked initiative(s) — module arrives in
-              milestone 3
-            </p>
+            <section className="px-5" aria-labelledby="giving-heading">
+              <h2
+                id="giving-heading"
+                className="display-stat text-sm font-bold text-ink-500"
+              >
+                Keep it going
+              </h2>
+              <div className="mt-2 space-y-3">
+                {teamInitiatives.map((initiative) => (
+                  <InitiativeModule
+                    key={initiative.id}
+                    initiative={initiative}
+                    onOpen={() => navigate(`/m/initiative/${initiative.id}`)}
+                  />
+                ))}
+              </div>
+            </section>
           )}
         </div>
       </main>
