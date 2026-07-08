@@ -10,7 +10,7 @@ export function Stat({
   return (
     <div>
       <div
-        className={`display-stat font-bold text-navy-900 ${
+        className={`display-stat font-bold text-rust-900 ${
           size === 'lg' ? 'text-3xl' : 'text-xl'
         }`}
       >

@@ -2,14 +2,15 @@
 @import '@fontsource-variable/archivo';
 
 @theme {
-  /* Syracuse-anchored palette. Orange is reserved for actions and progress
-     so it always reads as "act"; navy carries institutional/kiosk chrome. */
+  /* Syracuse-anchored palette, orange through and through: Syracuse orange
+     for actions and chrome, deep burnt-orange ("rust") where dark contrast
+     is needed — headings, kiosk chrome, stats. */
   --color-orange-500: #f76900;
   --color-orange-600: #dd5900;
   --color-orange-100: #ffefe3;
-  --color-navy-900: #000e54;
-  --color-navy-800: #101d63;
-  --color-navy-700: #1b2a6b;
+  --color-rust-900: #5a2400;
+  --color-rust-800: #7a3200;
+  --color-rust-700: #9c4200;
   --color-ink-900: #16181d;
   --color-ink-500: #5c6470;
   --color-ink-300: #a3aab5;
@@ -24,7 +25,7 @@
 
   --radius-card: 1rem;
   --shadow-card:
-    0 1px 3px rgb(0 14 84 / 0.08), 0 8px 24px rgb(0 14 84 / 0.06);
+    0 1px 3px rgb(90 36 0 / 0.08), 0 8px 24px rgb(90 36 0 / 0.06);
 
   --animate-event-pulse: event-pulse 0.9s ease-out 1;
   --animate-rise-in: rise-in 0.35s ease-out both;

@@ -7,13 +7,13 @@ import { Link } from 'react-router-dom'
  */
 export function KioskFrame({ children }: { children: ReactNode }) {
   return (
-    <div className="min-h-dvh bg-navy-900 text-white">
-      <div className="border-b border-white/10 bg-navy-800/60">
+    <div className="min-h-dvh bg-gradient-to-b from-orange-600 via-rust-800 to-rust-900 text-white">
+      <div className="border-b border-white/10 bg-rust-900/50">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3">
           <div className="display-stat text-sm font-bold tracking-wide text-white/90">
             Syracuse Rowing · Wall of Records
           </div>
-          <div className="display-stat rounded-md bg-orange-500 px-3 py-1 text-xs font-bold text-white">
+          <div className="display-stat rounded-md bg-white px-3 py-1 text-xs font-bold text-orange-600">
             Homecoming Weekend · Ten Eyck Boathouse
           </div>
         </div>

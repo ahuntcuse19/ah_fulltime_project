@@ -18,7 +18,7 @@ export function RecordsList({ records }: { records: TeamRecord[] }) {
               <div className="text-sm font-semibold text-ink-900">{r.label}</div>
               <div className="text-xs text-ink-500">{r.year}</div>
             </div>
-            <div className="display-stat text-lg font-bold text-navy-900">
+            <div className="display-stat text-lg font-bold text-rust-900">
               {r.value}
             </div>
           </div>

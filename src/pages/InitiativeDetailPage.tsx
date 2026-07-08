@@ -47,7 +47,7 @@ export default function InitiativeDetailPage() {
             <Badge tone={isLiveCampaign ? 'orange' : 'neutral'}>
               {isLiveCampaign ? 'Live campaign' : 'Designated fund'}
             </Badge>
-            <h1 className="display-stat mt-2 text-2xl font-bold leading-tight text-navy-900">
+            <h1 className="display-stat mt-2 text-2xl font-bold leading-tight text-rust-900">
               {initiative.title}
             </h1>
             <p className="mt-1 text-xs text-ink-500">
@@ -76,7 +76,7 @@ export default function InitiativeDetailPage() {
 
           <div className="pt-1">
             <SupportCta initiative={initiative} />
-            <p className="mt-2.5 text-center text-[11px] leading-relaxed text-ink-300">
+            <p className="mt-2.5 rounded-xl bg-orange-100 px-4 py-3 text-center text-xs font-semibold leading-relaxed text-orange-600">
               Gifts are made on Syracuse’s giving platform. Rocket surfaces
               the campaign — it never processes payments.
             </p>

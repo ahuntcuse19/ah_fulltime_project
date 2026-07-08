@@ -1,9 +1,9 @@
 const GRADIENTS: Array<[string, string]> = [
-  ['#F76900', '#000E54'],
-  ['#000E54', '#1B2A6B'],
+  ['#F76900', '#5A2400'],
+  ['#5A2400', '#9C4200'],
   ['#DD5900', '#7A2E00'],
-  ['#1B2A6B', '#F76900'],
-  ['#101D63', '#DD5900'],
+  ['#9C4200', '#F76900'],
+  ['#7A3200', '#DD5900'],
 ]
 
 function hashSeed(seed: string): number {
@@ -22,7 +22,7 @@ const aspects = {
 
 /**
  * Deterministic art in place of photos: a seeded gradient over the
- * orange/navy ramp with a duotone rowing-shell silhouette. Keeps the repo
+ * Syracuse-orange ramp with a duotone rowing-shell silhouette. Keeps the repo
  * free of stock-photo licensing while giving every entity a consistent,
  * intentional visual identity.
  */

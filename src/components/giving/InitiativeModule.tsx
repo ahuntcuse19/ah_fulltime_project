@@ -33,7 +33,7 @@ export function InitiativeModule({
             <Badge tone={isLiveCampaign ? 'orange' : 'neutral'}>
               {isLiveCampaign ? 'Live campaign' : 'Designated fund'}
             </Badge>
-            <h3 className="mt-1.5 text-[15px] font-bold leading-snug text-navy-900">
+            <h3 className="mt-1.5 text-[15px] font-bold leading-snug text-rust-900">
               {initiative.title}
             </h3>
             <p className="mt-0.5 line-clamp-2 text-xs leading-relaxed text-ink-500">
