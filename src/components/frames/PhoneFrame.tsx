@@ -7,7 +7,7 @@ import type { ReactNode } from 'react'
  */
 export function PhoneFrame({ children }: { children: ReactNode }) {
   return (
-    <div className="flex min-h-dvh items-center justify-center bg-navy-900 p-4 sm:p-8">
+    <div className="flex min-h-dvh items-center justify-center bg-gradient-to-b from-orange-500 to-rust-800 p-4 sm:p-8">
       <div className="w-full max-w-[390px] overflow-hidden rounded-none sm:rounded-[2.5rem] sm:border-8 sm:border-black sm:shadow-2xl">
         <div className="relative flex h-dvh max-h-[780px] flex-col bg-paper">
           {/* status bar */}

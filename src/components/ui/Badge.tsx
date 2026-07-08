@@ -1,10 +1,10 @@
 import type { ReactNode } from 'react'
 
-type Tone = 'orange' | 'navy' | 'neutral'
+type Tone = 'orange' | 'deep' | 'neutral'
 
 const tones: Record<Tone, string> = {
   orange: 'bg-orange-100 text-orange-600',
-  navy: 'bg-navy-900 text-white',
+  deep: 'bg-orange-600 text-white',
   neutral: 'bg-paper-dim text-ink-500',
 }
 

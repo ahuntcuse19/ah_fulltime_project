@@ -29,7 +29,7 @@ export function RosterList({
               <li
                 key={name}
                 className={`flex items-center justify-between py-2.5 text-sm ${
-                  isYou ? 'font-bold text-navy-900' : 'text-ink-900'
+                  isYou ? 'font-bold text-rust-900' : 'text-ink-900'
                 }`}
               >
                 <span className="flex items-center gap-2.5">

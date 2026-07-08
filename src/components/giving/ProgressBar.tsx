@@ -23,7 +23,7 @@ export function ProgressBar({
   if (raised === undefined) {
     return (
       <div className="flex items-center gap-2">
-        <span className="display-stat rounded-md bg-navy-900/5 px-2 py-1 text-[11px] font-bold text-navy-900">
+        <span className="display-stat rounded-md bg-orange-100 px-2 py-1 text-[11px] font-bold text-rust-900">
           Goal: {formatMoney(goal)}
         </span>
         <span className="text-xs text-ink-500">Designated fund · Syracuse Athletics</span>
@@ -38,7 +38,7 @@ export function ProgressBar({
     <div>
       <div className="flex items-baseline justify-between">
         <span
-          className={`display-stat font-bold text-navy-900 ${big ? 'text-2xl' : 'text-base'}`}
+          className={`display-stat font-bold text-rust-900 ${big ? 'text-2xl' : 'text-base'}`}
         >
           {formatMoney(raised)}
           <span className={`font-semibold text-ink-500 ${big ? 'text-sm' : 'text-xs'}`}>

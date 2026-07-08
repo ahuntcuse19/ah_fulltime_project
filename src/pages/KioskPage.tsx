@@ -92,7 +92,7 @@ function KioskTeam() {
               className="block w-full cursor-pointer rounded-2xl bg-white p-5 text-left text-ink-900 shadow-card transition-transform hover:scale-[1.01]"
             >
               <Badge tone="orange">Live campaign</Badge>
-              <h3 className="mt-2 text-xl font-bold text-navy-900">
+              <h3 className="mt-2 text-xl font-bold text-rust-900">
                 {initiative.title}
               </h3>
               <div className="mt-3">

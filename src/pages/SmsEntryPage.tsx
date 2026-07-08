@@ -22,7 +22,7 @@ export default function SmsEntryPage() {
       <div className="flex h-full flex-col">
         {/* messages header */}
         <div className="border-b border-paper-dim bg-paper px-5 pb-3 text-center">
-          <div className="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-navy-900 text-sm font-bold text-white">
+          <div className="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-orange-600 text-sm font-bold text-white">
             SU
           </div>
           <div className="mt-1 text-xs font-semibold text-ink-900">
@@ -46,7 +46,7 @@ export default function SmsEntryPage() {
             <div className="display-stat text-xs font-bold text-orange-600">
               cuse.rocket.link/lw8-2014
             </div>
-            <div className="mt-1 text-sm font-semibold text-navy-900">
+            <div className="mt-1 text-sm font-semibold text-rust-900">
               2014 Lightweight 8+ · Wall of Records
             </div>
             <div className="mt-0.5 text-xs text-ink-500">

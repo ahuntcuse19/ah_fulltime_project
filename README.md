@@ -37,7 +37,7 @@ Deploys automatically to GitHub Pages via `.github/workflows/deploy.yml` (Settin
 
 ## Architecture notes
 
-- **Stack:** Vite + React + TypeScript, Tailwind v4 (design tokens live in one `@theme` block in `src/styles/index.css`).
+- **Stack:** Vite + React + TypeScript, Tailwind v4 (design tokens live in one `@theme` block in `src/styles/index.css`). The palette is Syracuse orange throughout, with a deep burnt-orange ("rust") family carrying headings and kiosk chrome; the mock external page deliberately breaks the system to sell the handoff boundary.
 - **Routing:** HashRouter; surface (`mobile` vs `kiosk`) is encoded in the route namespace (`/m/*`, `/kiosk/*`) and injected by layout routes — it survives refresh and deep links with no global state.
 - **Data:** one mock module (`src/data/`) — `Entity`, `Initiative`, `Alum`, `AnalyticsEvent`. No backend, no auth, no CMS.
 - **Analytics:** a ~60-line store on `useSyncExternalStore` with sessionStorage persistence; the funnel viz is plain divs. No chart/state libraries.
