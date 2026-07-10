@@ -4,8 +4,9 @@ import { formatMoney } from '../lib/format'
 
 /**
  * Plays the part of the school's giving platform (GiveCampus-style).
- * Deliberately styled in a foreign visual language — white, green, serif —
- * so the boundary between Rocket and the school's platform is visceral.
+ * Styled in a foreign visual language — flat white, serif, square corners —
+ * so the boundary between Rocket and the school's platform stays visible
+ * even though the accent color matches the school's burnt orange.
  * Fires NO analytics events: Rocket's funnel ends at handoff, and this
  * page proves it. The UTM panel shows the attribution the school's
  * platform receives.
@@ -36,9 +37,9 @@ export default function MockGivingPage() {
       </div>
 
       {/* foreign chrome */}
-      <header className="border-b-4 border-ext-green bg-white">
+      <header className="border-b-4 border-rust-700 bg-white">
         <div className="mx-auto flex max-w-2xl items-center justify-between px-5 py-4">
-          <div className="text-xl font-bold tracking-tight text-ext-green-dark">
+          <div className="text-xl font-bold tracking-tight text-rust-900">
             GiveOrange
           </div>
           <div className="font-sans text-xs text-stone-500">
@@ -48,7 +49,7 @@ export default function MockGivingPage() {
       </header>
 
       <main className="mx-auto max-w-2xl px-5 py-8">
-        <p className="font-sans text-xs uppercase tracking-widest text-ext-green">
+        <p className="font-sans text-xs uppercase tracking-widest text-rust-700">
           Athletics · Rowing
         </p>
         <h1 className="mt-2 text-3xl font-bold leading-tight text-stone-900">
@@ -57,7 +58,7 @@ export default function MockGivingPage() {
 
         {initiative.raised_amount !== undefined ? (
           <div className="mt-6 rounded border border-stone-200 p-5">
-            <div className="text-2xl font-bold text-ext-green-dark">
+            <div className="text-2xl font-bold text-rust-900">
               {formatMoney(initiative.raised_amount)}
               <span className="text-base font-normal text-stone-500">
                 {' '}
@@ -66,7 +67,7 @@ export default function MockGivingPage() {
             </div>
             <div className="mt-3 h-3 overflow-hidden rounded-full bg-stone-100">
               <div
-                className="h-full bg-ext-green"
+                className="h-full bg-rust-700"
                 style={{
                   width: `${Math.min(100, (initiative.raised_amount / initiative.goal_amount) * 100)}%`,
                 }}
@@ -80,7 +81,7 @@ export default function MockGivingPage() {
           </div>
         ) : (
           <div className="mt-6 rounded border border-stone-200 p-5">
-            <div className="text-2xl font-bold text-ext-green-dark">
+            <div className="text-2xl font-bold text-rust-900">
               {formatMoney(initiative.goal_amount)}
               <span className="text-base font-normal text-stone-500"> goal</span>
             </div>
@@ -93,13 +94,13 @@ export default function MockGivingPage() {
           {[50, 100, 250].map((amt) => (
             <button
               key={amt}
-              className="cursor-pointer rounded border-2 border-ext-green py-3 font-bold text-ext-green-dark transition-colors hover:bg-ext-green hover:text-white"
+              className="cursor-pointer rounded border-2 border-rust-700 py-3 font-bold text-rust-900 transition-colors hover:bg-rust-700 hover:text-white"
             >
               ${amt}
             </button>
           ))}
         </div>
-        <button className="mt-3 w-full cursor-pointer rounded bg-ext-green py-4 font-sans text-lg font-bold text-white transition-colors hover:bg-ext-green-dark">
+        <button className="mt-3 w-full cursor-pointer rounded bg-rust-700 py-4 font-sans text-lg font-bold text-white transition-colors hover:bg-rust-900">
           Give now
         </button>
         <p className="mt-2 text-center font-sans text-xs text-stone-400">

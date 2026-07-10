@@ -16,9 +16,6 @@
   --color-ink-300: #a3aab5;
   --color-paper: #faf8f5;
   --color-paper-dim: #f1ede7;
-  /* Foreign accent used ONLY by the mocked external giving page. */
-  --color-ext-green: #1e7d4e;
-  --color-ext-green-dark: #14603a;
 
   --font-display: 'Archivo Variable', ui-sans-serif, system-ui, sans-serif;
   --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
