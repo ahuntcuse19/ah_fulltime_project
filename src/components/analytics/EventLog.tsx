@@ -1,4 +1,4 @@
-import type { AnalyticsEvent } from '../../data/types'
+import type { AnalyticsEvent } from '../../analytics/events'
 
 const time = new Intl.DateTimeFormat('en-US', {
   hour: 'numeric',

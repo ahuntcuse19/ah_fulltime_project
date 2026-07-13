@@ -1,27 +1,15 @@
-import type { AnalyticsEvent, EventName, Surface } from '../data/types'
+import type { AnalyticsEvent, EventName } from './events'
+import type { Surface } from '../data/types'
 
-const STORAGE_KEY = 'ag.events.v1'
-
+/**
+ * The event bus, in its entirety: a module-scope array plus a listener
+ * set. Deliberately in-memory only — no backend, no storage, no SDK — so
+ * a refresh starts an empty session and the overlay can only ever show
+ * clicks that actually happened in this one. Honest by construction.
+ */
 type Listener = () => void
 
-function load(): AnalyticsEvent[] {
-  try {
-    const raw = sessionStorage.getItem(STORAGE_KEY)
-    return raw ? (JSON.parse(raw) as AnalyticsEvent[]) : []
-  } catch {
-    return []
-  }
-}
-
-function persist(events: AnalyticsEvent[]) {
-  try {
-    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(events))
-  } catch {
-    // private mode / quota — the demo still works, it just won't survive refresh
-  }
-}
-
-let events: AnalyticsEvent[] = load()
+let events: AnalyticsEvent[] = []
 const listeners = new Set<Listener>()
 let counter = 0
 
@@ -39,13 +27,11 @@ export function track(input: TrackInput): void {
     ts: Date.now(),
   }
   events = [...events, event]
-  persist(events)
   listeners.forEach((l) => l())
 }
 
 export function clearEvents(): void {
   events = []
-  persist(events)
   listeners.forEach((l) => l())
 }
 

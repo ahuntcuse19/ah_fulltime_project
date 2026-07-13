@@ -1,7 +1,7 @@
 import { useCallback, useSyncExternalStore } from 'react'
 import { track, subscribe, getSnapshot } from './store'
 import { useSurface } from '../surface/SurfaceContext'
-import type { EventName } from '../data/types'
+import type { EventName } from './events'
 
 /**
  * Surface-stamped tracker: every event fired through this hook is

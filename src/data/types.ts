@@ -46,19 +46,4 @@ export interface Alum {
   teams: string[]
 }
 
-export type EventName =
-  | 'link_open'
-  | 'kiosk_open'
-  | 'team_view'
-  | 'initiative_view'
-  | 'support_tap'
-  | 'handoff_initiated'
-
-export interface AnalyticsEvent {
-  id: string
-  name: EventName
-  surface: Surface
-  entity_id?: string
-  initiative_id?: string
-  ts: number
-}
+// Analytics event names and shapes live with the bus in src/analytics/events.ts.

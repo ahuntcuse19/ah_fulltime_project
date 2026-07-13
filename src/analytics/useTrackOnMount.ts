@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { useAnalytics } from './AnalyticsContext'
-import type { EventName } from '../data/types'
+import type { EventName } from './events'
 
 /**
  * Fires a view event once per mounted screen. The ref guard keeps React 18
