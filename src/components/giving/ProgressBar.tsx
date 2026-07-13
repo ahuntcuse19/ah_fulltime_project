@@ -5,19 +5,23 @@ interface ProgressBarProps {
   raised?: number
   donorCount?: number
   lastUpdated?: string
+  kind?: 'live_campaign' | 'designated_fund'
   size?: 'sm' | 'lg'
 }
 
 /**
  * Progress figures are optional, school-supplied fields. With data: filled
  * bar + raised/goal + "as of" stamp. Without: a labeled goal chip — no
- * empty bars, no fake zeros, never looks broken or stale.
+ * empty bars, no fake zeros, never looks broken or stale. The goal-only
+ * caption follows what the destination IS (kind), because a campaign with
+ * unpublished numbers is not a designated fund.
  */
 export function ProgressBar({
   goal,
   raised,
   donorCount,
   lastUpdated,
+  kind = 'live_campaign',
   size = 'sm',
 }: ProgressBarProps) {
   if (raised === undefined) {
@@ -26,7 +30,11 @@ export function ProgressBar({
         <span className="display-stat rounded-md bg-orange-100 px-2 py-1 text-[11px] font-bold text-rust-900">
           Goal: {formatMoney(goal)}
         </span>
-        <span className="text-xs text-ink-500">Designated fund · Syracuse Athletics</span>
+        <span className="text-xs text-ink-500">
+          {kind === 'designated_fund'
+            ? 'Designated fund · Syracuse Athletics'
+            : 'Progress updates come from Syracuse Athletics'}
+        </span>
       </div>
     )
   }

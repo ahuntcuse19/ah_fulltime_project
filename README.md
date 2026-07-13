@@ -32,7 +32,7 @@ Deploys automatically to GitHub Pages via `.github/workflows/deploy.yml` (Settin
 
 - **No fund creation.** Every initiative maps 1:1 to a giving destination the school already administers — a designated fund or a live crowdfunding campaign with its own URL.
 - **No payments.** The handoff is the end of Rocket's surface; the mock external page proves no events fire past it.
-- **Advancement governs, doesn't operate.** Progress figures (`raised_amount`, `donor_count`, `last_updated`) are optional school-entered fields. If they're never updated, the module degrades gracefully to goal + story + CTA — it never looks broken. Both states are seeded: "Restore the Boathouse Record Board" (fresh data) and "Rowing Excellence Fund" (goal-only).
+- **Advancement governs, doesn't operate.** Progress figures (`raised_amount`, `donor_count`, `last_updated`) are optional school-entered fields. If they're never updated, the module degrades gracefully to goal + story + CTA — it never looks broken. All three states are seeded: "Restore the Boathouse Record Board" (fresh data + "as of" stamp), "Erg Room Renewal" (goal-only), and the 1978 Varsity 8+ (no linked fundraiser at all — the giving module simply doesn't render, because Rocket only surfaces campaigns that exist).
 - **The kiosk audience is conceded.** Day-to-day, the touchscreen crowd is students and tour parents. Alumni touch the display at event moments and their phones every day — which is why mobile is the primary path.
 
 ## Architecture notes

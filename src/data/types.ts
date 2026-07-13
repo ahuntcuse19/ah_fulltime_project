@@ -25,6 +25,13 @@ export interface Entity {
 export interface Initiative {
   id: string
   linked_entity_id: string
+  /**
+   * What the giving destination IS — a time-boxed campaign or a standing
+   * designated fund. Deliberately independent of the optional progress
+   * fields below: a campaign whose school never published numbers is
+   * still a campaign, and missing data must never recategorize it.
+   */
+  kind: 'live_campaign' | 'designated_fund'
   title: string
   story: string
   photoSeed: string

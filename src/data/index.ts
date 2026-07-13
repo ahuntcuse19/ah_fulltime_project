@@ -15,16 +15,22 @@ export function getInitiative(id: string): Initiative | undefined {
 }
 
 /**
- * Initiatives relevant to an entity: its own campaign(s) first, then the
- * program-level designated fund as a fallback destination.
+ * Only initiatives the school actually runs for THIS entity — no
+ * program-level fallback. A team with no live campaign gets recognition
+ * content and no giving module; the absence is the honest system signal
+ * that Rocket surfaces existing campaigns rather than inventing an ask.
  */
 export function getInitiativesForEntity(entityId: string): Initiative[] {
-  const direct = initiatives.filter((i) => i.linked_entity_id === entityId)
-  const programLevel = initiatives.filter(
-    (i) =>
-      i.linked_entity_id === 'rowing-program' && i.linked_entity_id !== entityId,
-  )
-  return [...direct, ...programLevel]
+  return initiatives.filter((i) => i.linked_entity_id === entityId)
+}
+
+/**
+ * The other teams on the wall — powers the team page's "More from the
+ * Wall" links, which is how the demo reaches a team with no linked
+ * fundraiser without adding a second persona.
+ */
+export function getTeamsExcept(entityId: string): Entity[] {
+  return entities.filter((e) => e.type === 'team' && e.id !== entityId)
 }
 
 /** The team page the demo SMS deep-links to. */

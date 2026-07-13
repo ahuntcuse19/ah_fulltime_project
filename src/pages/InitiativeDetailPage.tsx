@@ -25,7 +25,7 @@ export default function InitiativeDetailPage() {
   }
 
   const entity = getEntity(initiative.linked_entity_id)
-  const isLiveCampaign = initiative.raised_amount !== undefined
+  const isLiveCampaign = initiative.kind === 'live_campaign'
 
   return (
     <div className="min-h-dvh bg-paper sm:bg-paper-dim">
@@ -61,6 +61,7 @@ export default function InitiativeDetailPage() {
               raised={initiative.raised_amount}
               donorCount={initiative.donor_count}
               lastUpdated={initiative.last_updated}
+              kind={initiative.kind}
               size="lg"
             />
           </Card>
@@ -71,7 +72,9 @@ export default function InitiativeDetailPage() {
 
           <SocialProof
             donorCount={initiative.donor_count}
-            fallbackText="Every gift is directed to this fund by Syracuse Athletics."
+            fallbackText={`Every gift is directed to this ${
+              isLiveCampaign ? 'campaign' : 'fund'
+            } by Syracuse Athletics.`}
           />
 
           <div className="pt-1">

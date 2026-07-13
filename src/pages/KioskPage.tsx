@@ -91,7 +91,9 @@ function KioskTeam() {
               onClick={() => navigate(`/kiosk/initiative/${initiative.id}`)}
               className="block w-full cursor-pointer rounded-2xl bg-white p-5 text-left text-ink-900 shadow-card transition-transform hover:scale-[1.01]"
             >
-              <Badge tone="orange">Live campaign</Badge>
+              <Badge tone={initiative.kind === 'live_campaign' ? 'orange' : 'neutral'}>
+                {initiative.kind === 'live_campaign' ? 'Live campaign' : 'Designated fund'}
+              </Badge>
               <h3 className="mt-2 text-xl font-bold text-rust-900">
                 {initiative.title}
               </h3>
@@ -101,6 +103,7 @@ function KioskTeam() {
                   raised={initiative.raised_amount}
                   donorCount={initiative.donor_count}
                   lastUpdated={initiative.last_updated}
+                  kind={initiative.kind}
                 />
               </div>
               <div className="display-stat mt-3 text-sm font-bold text-orange-600">
@@ -162,6 +165,7 @@ function KioskInitiative({ initiativeId }: { initiativeId: string }) {
               raised={initiative.raised_amount}
               donorCount={initiative.donor_count}
               lastUpdated={initiative.last_updated}
+              kind={initiative.kind}
               size="lg"
             />
           </div>
