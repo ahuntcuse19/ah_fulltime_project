@@ -175,8 +175,11 @@ function KioskInitiative({ initiativeId }: { initiativeId: string }) {
                 caption="Scan to open this campaign on your phone"
               />
               <TextMeLink initiativeId={initiative.id} />
-              <p className="text-xs leading-relaxed text-white/40">
-                Gifts happen on Syracuse’s giving platform, on your phone.
+              <p className="text-xs leading-relaxed text-white/60">
+                You’re heading to Syracuse’s giving page —{' '}
+                <span className="font-semibold text-white">
+                  Rocket doesn’t process donations.
+                </span>{' '}
                 This display never asks for a payment.
               </p>
             </>

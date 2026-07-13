@@ -5,6 +5,8 @@ import { Card } from '../ui/Card'
 /**
  * The boundary, made unmistakable: Rocket surfaces the appeal, Syracuse's
  * own giving platform takes the gift. No payment ever touches Rocket.
+ * The disclaimer is a full-width strip, not body copy, so no screenshot
+ * of this screen can crop it out.
  */
 export function HandoffInterstitial({
   initiative,
@@ -27,12 +29,13 @@ export function HandoffInterstitial({
       <h1 className="display-stat mt-4 text-xl font-bold text-rust-900">
         You’re heading to Syracuse’s giving page
       </h1>
-      <p className="mt-2 text-sm leading-relaxed text-ink-500">
+      <p className="display-stat mt-3 rounded-xl bg-orange-500 px-4 py-3 text-sm font-bold text-white">
+        Rocket doesn’t process donations
+      </p>
+      <p className="mt-3 text-sm leading-relaxed text-ink-500">
         “{initiative.title}” is a Syracuse Athletics campaign. Your gift is
-        made on the university’s own giving platform —{' '}
-        <span className="font-semibold text-ink-900">
-          Rocket never handles your gift.
-        </span>
+        made on the university’s own giving platform — Rocket never sees or
+        handles it.
       </p>
       <div className="mt-3 rounded-lg bg-paper px-3 py-2 text-xs text-ink-500">
         {initiative.giving_platform_url}
