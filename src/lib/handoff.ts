@@ -1,6 +1,13 @@
 import type { Initiative, Surface } from '../data/types'
 
 /**
+ * The boundary claim, verbatim, shared by every exit surface (mobile
+ * interstitial, kiosk QR panel) so the screens can never drift into
+ * making subtly different payment claims.
+ */
+export const PAYMENT_BOUNDARY_COPY = 'Rocket doesn’t process donations'
+
+/**
  * Builds the source-tagged URL for the school's giving platform. In this
  * prototype the "external" page is the internal /give route; the UTM params
  * are the real payload — they're how the school's platform attributes the

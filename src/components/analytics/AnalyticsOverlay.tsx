@@ -10,7 +10,9 @@ type Filter = 'all' | Surface
 /**
  * Instrumentation layer for the demo: a floating toggle on every screen
  * (including the mock external page, where visibly NOTHING fires) and a
- * panel with the surface-split funnel plus a live event log.
+ * panel with the surface-split funnel plus a live event log. Off by
+ * default; when off, only the quiet toggle pill renders — no counts, no
+ * panel, nothing over the flow.
  */
 export function AnalyticsOverlay() {
   const [open, setOpen] = useState(false)
@@ -45,12 +47,18 @@ export function AnalyticsOverlay() {
           className={`h-1.5 w-1.5 rounded-full ${open ? 'bg-white' : 'bg-orange-500'}`}
           aria-hidden="true"
         />
-        Analytics {events.length > 0 && `(${events.length})`}
+        Analytics {open && events.length > 0 && `(${events.length})`}
       </button>
 
       {open && (
         <aside
-          className="fixed bottom-16 right-4 z-50 w-[min(24rem,calc(100vw-2rem))] rounded-2xl bg-ink-900/95 p-4 text-white shadow-2xl backdrop-blur animate-rise-in"
+          // Fully interactive (the log scrolls, tooltips work) and NEVER
+          // click-through: taps must not fall through to hidden controls
+          // and fire phantom funnel events. Occlusion is solved by layout
+          // instead — top-anchored on phones so the flow's bottom CTAs
+          // stay clear, bottom-right next to its pill on wider screens —
+          // and the pill closes it in one tap wherever it's in the way.
+          className="fixed right-4 top-4 z-50 w-[min(24rem,calc(100vw-2rem))] rounded-2xl bg-ink-900/95 p-4 text-white shadow-2xl backdrop-blur animate-rise-in sm:bottom-16 sm:top-auto"
           aria-label="Analytics mode"
         >
           <div className="flex items-center justify-between">
@@ -79,6 +87,10 @@ export function AnalyticsOverlay() {
               </button>
             </div>
           </div>
+
+          <p className="mt-1 text-[10px] font-semibold text-orange-500">
+            Simulated session — no real traffic.
+          </p>
 
           <div className="mt-3">
             <FunnelViz events={filtered} />

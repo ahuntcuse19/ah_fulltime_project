@@ -25,6 +25,13 @@ export interface Entity {
 export interface Initiative {
   id: string
   linked_entity_id: string
+  /**
+   * What the giving destination IS — a time-boxed campaign or a standing
+   * designated fund. Deliberately independent of the optional progress
+   * fields below: a campaign whose school never published numbers is
+   * still a campaign, and missing data must never recategorize it.
+   */
+  kind: 'live_campaign' | 'designated_fund'
   title: string
   story: string
   photoSeed: string
@@ -46,19 +53,3 @@ export interface Alum {
   teams: string[]
 }
 
-export type EventName =
-  | 'link_open'
-  | 'kiosk_open'
-  | 'team_view'
-  | 'initiative_view'
-  | 'support_tap'
-  | 'handoff_initiated'
-
-export interface AnalyticsEvent {
-  id: string
-  name: EventName
-  surface: Surface
-  entity_id?: string
-  initiative_id?: string
-  ts: number
-}

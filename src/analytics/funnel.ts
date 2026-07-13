@@ -1,5 +1,4 @@
-import type { AnalyticsEvent } from '../data/types'
-import { FUNNEL_STAGES } from './events'
+import { FUNNEL_STAGES, type AnalyticsEvent } from './events'
 
 export interface FunnelStage {
   key: string

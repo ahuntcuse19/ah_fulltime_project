@@ -26,21 +26,23 @@ Deploys automatically to GitHub Pages via `.github/workflows/deploy.yml` (Settin
 
 **Secondary path — the kiosk (`/#/kiosk`):** the same content at touchscreen scale, framed for reunion/homecoming moments. The handoff is a scannable QR (tagged `kiosk_qr`) or "text me the link" — the transaction always belongs on the alum's phone.
 
-**Analytics mode** — the floating toggle (or press `a`) shows funnel events firing live: `link_open | kiosk_open → team_view → initiative_view → support_tap → handoff_initiated`, split by surface. Two deliberate honesty features: the entry event is split by surface because the top of the funnel is the whole reach question, and the funnel *ends* at handoff — Rocket reports intent; the school's platform attributes completions via the source tag.
+**Analytics mode** — the floating toggle (or press `a`) shows funnel events firing live: `link_open | kiosk_open → team_view → initiative_view → support_tap → handoff_initiated`, split by surface and labeled "Simulated session — no real traffic." Three deliberate honesty features: the entry event is split by surface because the top of the funnel is the whole reach question; the funnel *ends* at handoff — Rocket reports intent; the school's platform attributes completions via the source tag; and the log is session-only raw counts — no percentages, no persistence, nothing a refresh doesn't wipe.
+
+**The pilot plan** — `/#/pilot`, linked only from the entry screen's footer ("About this prototype →"), lays out what a 2-week pilot would test, what it would measure, and the riskiest assumptions — reviewer-facing, never surfaced inside the alum flow.
 
 ## Product boundaries (the design's honest premises)
 
 - **No fund creation.** Every initiative maps 1:1 to a giving destination the school already administers — a designated fund or a live crowdfunding campaign with its own URL.
 - **No payments.** The handoff is the end of Rocket's surface; the mock external page proves no events fire past it.
-- **Advancement governs, doesn't operate.** Progress figures (`raised_amount`, `donor_count`, `last_updated`) are optional school-entered fields. If they're never updated, the module degrades gracefully to goal + story + CTA — it never looks broken. Both states are seeded: "Restore the Boathouse Record Board" (fresh data) and "Rowing Excellence Fund" (goal-only).
+- **Advancement governs, doesn't operate.** Progress figures (`raised_amount`, `donor_count`, `last_updated`) are optional school-entered fields. If they're never updated, the module degrades gracefully to goal + story + CTA — it never looks broken. All three states are seeded: "Restore the Boathouse Record Board" (fresh data + "as of" stamp), "Erg Room Renewal" (goal-only), and the 1978 Varsity 8+ (no linked fundraiser at all — the giving module simply doesn't render, because Rocket only surfaces campaigns that exist).
 - **The kiosk audience is conceded.** Day-to-day, the touchscreen crowd is students and tour parents. Alumni touch the display at event moments and their phones every day — which is why mobile is the primary path.
 
 ## Architecture notes
 
 - **Stack:** Vite + React + TypeScript, Tailwind v4 (design tokens live in one `@theme` block in `src/styles/index.css`). The palette is Syracuse orange throughout, with a deep burnt-orange ("rust") family carrying headings and kiosk chrome; the mock external page deliberately breaks the system to sell the handoff boundary.
 - **Routing:** HashRouter; surface (`mobile` vs `kiosk`) is encoded in the route namespace (`/m/*`, `/kiosk/*`) and injected by layout routes — it survives refresh and deep links with no global state.
-- **Data:** one mock module (`src/data/`) — `Entity`, `Initiative`, `Alum`, `AnalyticsEvent`. No backend, no auth, no CMS.
-- **Analytics:** a ~60-line store on `useSyncExternalStore` with sessionStorage persistence; the funnel viz is plain divs. No chart/state libraries.
+- **Data:** one mock module (`src/data/`) — `Entity`, `Initiative`, `Alum`. No backend, no auth, no CMS.
+- **Analytics:** event names and the bus live together in `src/analytics/` — a ~40-line in-memory store on `useSyncExternalStore`, no persistence (a refresh is a clean session by construction); the funnel viz is plain divs. No chart/state libraries.
 - **Imagery:** deterministic SVG placeholder art (seeded gradients + rowing-shell silhouette) — zero stock-photo licensing in an application repo, consistent art direction.
 - **Dependencies:** react, react-dom, react-router-dom, qrcode.react (the kiosk QR is genuinely scannable — it encodes the deployed mobile URL at runtime), one variable font.
 

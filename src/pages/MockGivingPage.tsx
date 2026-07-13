@@ -62,6 +62,7 @@ export default function MockGivingPage() {
               raised={initiative.raised_amount}
               donorCount={initiative.donor_count}
               lastUpdated={initiative.last_updated}
+              kind={initiative.kind}
               size="lg"
             />
           </div>

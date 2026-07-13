@@ -8,6 +8,7 @@ import InitiativeDetailPage from './pages/InitiativeDetailPage'
 import HandoffPage from './pages/HandoffPage'
 import MockGivingPage from './pages/MockGivingPage'
 import KioskPage from './pages/KioskPage'
+import PilotPage from './pages/PilotPage'
 
 function MobileLayout() {
   return (
@@ -42,6 +43,8 @@ export default function App() {
       </Route>
       {/* Outside both surfaces: this route plays the school's own platform. */}
       <Route path="/give/:initiativeId" element={<MockGivingPage />} />
+      {/* Reviewer-facing, footer-linked from the entry screen only. */}
+      <Route path="/pilot" element={<PilotPage />} />
       <Route path="*" element={<Navigate to={`/m/team/${DEMO_TEAM_ID}`} replace />} />
       </Routes>
     </>

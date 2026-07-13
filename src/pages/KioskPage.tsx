@@ -9,12 +9,13 @@ import {
 import { KioskFrame } from '../components/frames/KioskFrame'
 import { PlaceholderImage } from '../components/ui/PlaceholderImage'
 import { Badge } from '../components/ui/Badge'
+import { KindBadge } from '../components/giving/KindBadge'
 import { ProgressBar } from '../components/giving/ProgressBar'
 import { QrHandoff } from '../components/kiosk/QrHandoff'
 import { TextMeLink } from '../components/kiosk/TextMeLink'
 import { useTrackOnMount } from '../analytics/useTrackOnMount'
 import { useAnalytics } from '../analytics/AnalyticsContext'
-import { buildQrUrl } from '../lib/handoff'
+import { buildQrUrl, PAYMENT_BOUNDARY_COPY } from '../lib/handoff'
 import { formatMoney } from '../lib/format'
 
 /**
@@ -91,7 +92,7 @@ function KioskTeam() {
               onClick={() => navigate(`/kiosk/initiative/${initiative.id}`)}
               className="block w-full cursor-pointer rounded-2xl bg-white p-5 text-left text-ink-900 shadow-card transition-transform hover:scale-[1.01]"
             >
-              <Badge tone="orange">Live campaign</Badge>
+              <KindBadge kind={initiative.kind} />
               <h3 className="mt-2 text-xl font-bold text-rust-900">
                 {initiative.title}
               </h3>
@@ -101,6 +102,7 @@ function KioskTeam() {
                   raised={initiative.raised_amount}
                   donorCount={initiative.donor_count}
                   lastUpdated={initiative.last_updated}
+                  kind={initiative.kind}
                 />
               </div>
               <div className="display-stat mt-3 text-sm font-bold text-orange-600">
@@ -119,7 +121,11 @@ function KioskInitiative({ initiativeId }: { initiativeId: string }) {
   const { track } = useAnalytics()
   const [showQr, setShowQr] = useState(false)
   const initiative = getInitiative(initiativeId)
-  useTrackOnMount('initiative_view', { initiative_id: initiativeId })
+  useTrackOnMount(
+    'initiative_view',
+    { initiative_id: initiativeId },
+    initiative !== undefined,
+  )
 
   if (!initiative) {
     return (
@@ -162,6 +168,7 @@ function KioskInitiative({ initiativeId }: { initiativeId: string }) {
               raised={initiative.raised_amount}
               donorCount={initiative.donor_count}
               lastUpdated={initiative.last_updated}
+              kind={initiative.kind}
               size="lg"
             />
           </div>
@@ -175,8 +182,11 @@ function KioskInitiative({ initiativeId }: { initiativeId: string }) {
                 caption="Scan to open this campaign on your phone"
               />
               <TextMeLink initiativeId={initiative.id} />
-              <p className="text-xs leading-relaxed text-white/40">
-                Gifts happen on Syracuse’s giving platform, on your phone.
+              <p className="text-xs leading-relaxed text-white/60">
+                You’re heading to Syracuse’s giving page —{' '}
+                <span className="font-semibold text-white">
+                  {PAYMENT_BOUNDARY_COPY}.
+                </span>{' '}
                 This display never asks for a payment.
               </p>
             </>

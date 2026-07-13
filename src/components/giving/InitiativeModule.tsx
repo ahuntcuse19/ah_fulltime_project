@@ -1,7 +1,7 @@
 import type { Initiative } from '../../data/types'
 import { Card } from '../ui/Card'
-import { Badge } from '../ui/Badge'
 import { PlaceholderImage } from '../ui/PlaceholderImage'
+import { KindBadge } from './KindBadge'
 import { ProgressBar } from './ProgressBar'
 
 /**
@@ -16,7 +16,6 @@ export function InitiativeModule({
   initiative: Initiative
   onOpen: () => void
 }) {
-  const isLiveCampaign = initiative.raised_amount !== undefined
   return (
     <Card className="overflow-hidden">
       <button
@@ -30,9 +29,7 @@ export function InitiativeModule({
             className="h-20 w-20 shrink-0 rounded-xl"
           />
           <div className="min-w-0 flex-1">
-            <Badge tone={isLiveCampaign ? 'orange' : 'neutral'}>
-              {isLiveCampaign ? 'Live campaign' : 'Designated fund'}
-            </Badge>
+            <KindBadge kind={initiative.kind} />
             <h3 className="mt-1.5 text-[15px] font-bold leading-snug text-rust-900">
               {initiative.title}
             </h3>
@@ -47,6 +44,7 @@ export function InitiativeModule({
             raised={initiative.raised_amount}
             donorCount={initiative.donor_count}
             lastUpdated={initiative.last_updated}
+            kind={initiative.kind}
           />
           <div className="mt-3 flex items-center justify-between">
             <span className="text-xs text-ink-500">Syracuse Athletics campaign</span>
