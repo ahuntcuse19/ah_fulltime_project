@@ -7,20 +7,16 @@ import type { Surface } from '../data/types'
  * are the entire "analytics system" — no SDK, no backend, no config.
  */
 
-/**
- * Every instrumented moment in the flow. Two entry events — link_open
- * (the texted highlight link, mobile) and kiosk_open (a walk-up at an
- * event moment) — then a shared spine across both surfaces.
- * handoff_initiated is deliberately the LAST event: the gift happens on
- * the school's platform, which attributes it via the UTM source tag.
- */
+/** Every instrumented moment in the flow, in funnel order. */
 export type EventName =
   | 'link_open' // mobile entry: the texted highlight link was tapped
   | 'kiosk_open' // kiosk entry: the wall opened at an event moment
   | 'team_view' // recognition content viewed, either surface
   | 'initiative_view' // a campaign's detail screen was opened
   | 'support_tap' // the commitment moment: "Support this"
-  | 'handoff_initiated' // exit toward the school's giving page — Rocket's final event
+  // Deliberately the LAST event Rocket sees: the gift happens on the
+  // school's platform, which attributes it via the UTM source tag.
+  | 'handoff_initiated'
 
 export interface AnalyticsEvent {
   id: string

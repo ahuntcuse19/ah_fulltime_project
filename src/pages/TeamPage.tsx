@@ -8,6 +8,7 @@ import {
 import { TeamHero } from '../components/recognition/TeamHero'
 import { RecordsList } from '../components/recognition/RecordsList'
 import { RosterList } from '../components/recognition/RosterList'
+import { Card } from '../components/ui/Card'
 import { InitiativeModule } from '../components/giving/InitiativeModule'
 import { useTrackOnMount } from '../analytics/useTrackOnMount'
 
@@ -15,7 +16,7 @@ export default function TeamPage() {
   const { teamId = '' } = useParams()
   const navigate = useNavigate()
   const entity = getEntity(teamId)
-  useTrackOnMount('team_view', { entity_id: teamId })
+  useTrackOnMount('team_view', { entity_id: teamId }, entity !== undefined)
 
   if (!entity) {
     return (
@@ -74,23 +75,24 @@ export default function TeamPage() {
               </h2>
               <div className="mt-2 space-y-2">
                 {otherTeams.map((team) => (
-                  <Link
-                    key={team.id}
-                    to={`/m/team/${team.id}`}
-                    className="flex items-center justify-between rounded-2xl bg-white p-4 shadow-card transition-colors hover:bg-paper/60"
-                  >
-                    <span className="min-w-0">
-                      <span className="block truncate text-sm font-bold text-rust-900">
-                        {team.name}
+                  <Card key={team.id} className="overflow-hidden">
+                    <Link
+                      to={`/m/team/${team.id}`}
+                      className="flex items-center justify-between p-4 transition-colors hover:bg-paper/60"
+                    >
+                      <span className="min-w-0">
+                        <span className="block truncate text-sm font-bold text-rust-900">
+                          {team.name}
+                        </span>
+                        <span className="mt-0.5 block text-xs text-ink-500">
+                          {team.years}
+                        </span>
                       </span>
-                      <span className="mt-0.5 block text-xs text-ink-500">
-                        {team.years}
+                      <span className="display-stat shrink-0 text-xs font-bold text-orange-600">
+                        View →
                       </span>
-                    </span>
-                    <span className="display-stat shrink-0 text-xs font-bold text-orange-600">
-                      View →
-                    </span>
-                  </Link>
+                    </Link>
+                  </Card>
                 ))}
               </div>
             </section>

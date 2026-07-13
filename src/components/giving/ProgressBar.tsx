@@ -1,11 +1,14 @@
+import type { Initiative } from '../../data/types'
 import { formatMoney, formatAsOfDate, pctToGoal } from '../../lib/format'
+import { KIND_META } from './KindBadge'
 
 interface ProgressBarProps {
   goal: number
   raised?: number
   donorCount?: number
   lastUpdated?: string
-  kind?: 'live_campaign' | 'designated_fund'
+  /** Required so a forgotten prop can't mislabel a fund as a campaign. */
+  kind: Initiative['kind']
   size?: 'sm' | 'lg'
 }
 
@@ -21,7 +24,7 @@ export function ProgressBar({
   raised,
   donorCount,
   lastUpdated,
-  kind = 'live_campaign',
+  kind,
   size = 'sm',
 }: ProgressBarProps) {
   if (raised === undefined) {
@@ -30,11 +33,7 @@ export function ProgressBar({
         <span className="display-stat rounded-md bg-orange-100 px-2 py-1 text-[11px] font-bold text-rust-900">
           Goal: {formatMoney(goal)}
         </span>
-        <span className="text-xs text-ink-500">
-          {kind === 'designated_fund'
-            ? 'Designated fund · Syracuse Athletics'
-            : 'Progress updates come from Syracuse Athletics'}
-        </span>
+        <span className="text-xs text-ink-500">{KIND_META[kind].goalOnlyNote}</span>
       </div>
     )
   }

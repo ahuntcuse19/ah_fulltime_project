@@ -1,8 +1,8 @@
 import { Link, useParams } from 'react-router-dom'
 import { getInitiative, getEntity } from '../data'
 import { PlaceholderImage } from '../components/ui/PlaceholderImage'
-import { Badge } from '../components/ui/Badge'
 import { Card } from '../components/ui/Card'
+import { KindBadge, KIND_META } from '../components/giving/KindBadge'
 import { ProgressBar } from '../components/giving/ProgressBar'
 import { SocialProof } from '../components/giving/SocialProof'
 import { SupportCta } from '../components/giving/SupportCta'
@@ -11,7 +11,11 @@ import { useTrackOnMount } from '../analytics/useTrackOnMount'
 export default function InitiativeDetailPage() {
   const { initiativeId = '' } = useParams()
   const initiative = getInitiative(initiativeId)
-  useTrackOnMount('initiative_view', { initiative_id: initiativeId })
+  useTrackOnMount(
+    'initiative_view',
+    { initiative_id: initiativeId },
+    initiative !== undefined,
+  )
 
   if (!initiative) {
     return (
@@ -25,7 +29,6 @@ export default function InitiativeDetailPage() {
   }
 
   const entity = getEntity(initiative.linked_entity_id)
-  const isLiveCampaign = initiative.kind === 'live_campaign'
 
   return (
     <div className="min-h-dvh bg-paper sm:bg-paper-dim">
@@ -44,9 +47,7 @@ export default function InitiativeDetailPage() {
 
         <div className="space-y-5 px-5 pt-4">
           <div>
-            <Badge tone={isLiveCampaign ? 'orange' : 'neutral'}>
-              {isLiveCampaign ? 'Live campaign' : 'Designated fund'}
-            </Badge>
+            <KindBadge kind={initiative.kind} />
             <h1 className="display-stat mt-2 text-2xl font-bold leading-tight text-rust-900">
               {initiative.title}
             </h1>
@@ -73,7 +74,7 @@ export default function InitiativeDetailPage() {
           <SocialProof
             donorCount={initiative.donor_count}
             fallbackText={`Every gift is directed to this ${
-              isLiveCampaign ? 'campaign' : 'fund'
+              KIND_META[initiative.kind].noun
             } by Syracuse Athletics.`}
           />
 

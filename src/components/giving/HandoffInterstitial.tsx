@@ -1,4 +1,5 @@
 import type { Initiative } from '../../data/types'
+import { PAYMENT_BOUNDARY_COPY } from '../../lib/handoff'
 import { Button } from '../ui/Button'
 import { Card } from '../ui/Card'
 
@@ -30,7 +31,7 @@ export function HandoffInterstitial({
         You’re heading to Syracuse’s giving page
       </h1>
       <p className="display-stat mt-3 rounded-xl bg-orange-500 px-4 py-3 text-sm font-bold text-white">
-        Rocket doesn’t process donations
+        {PAYMENT_BOUNDARY_COPY}
       </p>
       <p className="mt-3 text-sm leading-relaxed text-ink-500">
         “{initiative.title}” is a Syracuse Athletics campaign. Your gift is

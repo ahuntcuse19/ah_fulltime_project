@@ -23,7 +23,7 @@ export interface TrackInput {
 export function track(input: TrackInput): void {
   const event: AnalyticsEvent = {
     ...input,
-    id: `evt-${Date.now()}-${counter++}`,
+    id: `evt-${counter++}`,
     ts: Date.now(),
   }
   events = [...events, event]

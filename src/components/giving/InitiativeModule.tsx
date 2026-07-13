@@ -1,7 +1,7 @@
 import type { Initiative } from '../../data/types'
 import { Card } from '../ui/Card'
-import { Badge } from '../ui/Badge'
 import { PlaceholderImage } from '../ui/PlaceholderImage'
+import { KindBadge } from './KindBadge'
 import { ProgressBar } from './ProgressBar'
 
 /**
@@ -16,7 +16,6 @@ export function InitiativeModule({
   initiative: Initiative
   onOpen: () => void
 }) {
-  const isLiveCampaign = initiative.kind === 'live_campaign'
   return (
     <Card className="overflow-hidden">
       <button
@@ -30,9 +29,7 @@ export function InitiativeModule({
             className="h-20 w-20 shrink-0 rounded-xl"
           />
           <div className="min-w-0 flex-1">
-            <Badge tone={isLiveCampaign ? 'orange' : 'neutral'}>
-              {isLiveCampaign ? 'Live campaign' : 'Designated fund'}
-            </Badge>
+            <KindBadge kind={initiative.kind} />
             <h3 className="mt-1.5 text-[15px] font-bold leading-snug text-rust-900">
               {initiative.title}
             </h3>

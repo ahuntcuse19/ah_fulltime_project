@@ -26,7 +26,9 @@ Deploys automatically to GitHub Pages via `.github/workflows/deploy.yml` (Settin
 
 **Secondary path — the kiosk (`/#/kiosk`):** the same content at touchscreen scale, framed for reunion/homecoming moments. The handoff is a scannable QR (tagged `kiosk_qr`) or "text me the link" — the transaction always belongs on the alum's phone.
 
-**Analytics mode** — the floating toggle (or press `a`) shows funnel events firing live: `link_open | kiosk_open → team_view → initiative_view → support_tap → handoff_initiated`, split by surface. Two deliberate honesty features: the entry event is split by surface because the top of the funnel is the whole reach question, and the funnel *ends* at handoff — Rocket reports intent; the school's platform attributes completions via the source tag.
+**Analytics mode** — the floating toggle (or press `a`) shows funnel events firing live: `link_open | kiosk_open → team_view → initiative_view → support_tap → handoff_initiated`, split by surface and labeled "Simulated session — no real traffic." Three deliberate honesty features: the entry event is split by surface because the top of the funnel is the whole reach question; the funnel *ends* at handoff — Rocket reports intent; the school's platform attributes completions via the source tag; and the log is session-only raw counts — no percentages, no persistence, nothing a refresh doesn't wipe.
+
+**The pilot plan** — `/#/pilot`, linked only from the entry screen's footer ("About this prototype →"), lays out what a 2-week pilot would test, what it would measure, and the riskiest assumptions — reviewer-facing, never surfaced inside the alum flow.
 
 ## Product boundaries (the design's honest premises)
 

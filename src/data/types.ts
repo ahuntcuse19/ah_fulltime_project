@@ -53,4 +53,3 @@ export interface Alum {
   teams: string[]
 }
 
-// Analytics event names and shapes live with the bus in src/analytics/events.ts.
