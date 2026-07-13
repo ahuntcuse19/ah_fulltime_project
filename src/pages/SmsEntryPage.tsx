@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { PhoneFrame } from '../components/frames/PhoneFrame'
 import { demoAlum, DEMO_TEAM_ID } from '../data'
 import { useAnalytics } from '../analytics/AnalyticsContext'
@@ -55,10 +55,18 @@ export default function SmsEntryPage() {
           </button>
         </div>
 
-        <p className="px-6 pb-5 text-center text-[10px] leading-relaxed text-ink-300">
-          Simulated text message — this prototype sends no SMS. Tap the link
-          preview to open the highlight.
-        </p>
+        <div className="px-6 pb-5 text-center">
+          <p className="text-[10px] leading-relaxed text-ink-300">
+            Simulated text message — this prototype sends no SMS. Tap the
+            link preview to open the highlight.
+          </p>
+          <Link
+            to="/pilot"
+            className="mt-1 inline-block text-[10px] font-semibold text-ink-500 hover:text-orange-600"
+          >
+            About this prototype →
+          </Link>
+        </div>
       </div>
     </PhoneFrame>
   )
