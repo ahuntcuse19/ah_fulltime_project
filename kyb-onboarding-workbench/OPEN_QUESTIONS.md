@@ -28,3 +28,10 @@ Every point where the prototype had to guess at something only Stable Sea would 
 16. **Who gets nudged when the blocker is a downstream party?** blockedOn only lists customer-side people. A case waiting on the bank partner shows as blocked on nobody.
 17. **The Singapore paper articles.** One seeded item cannot be resolved by software: the 2004 articles exist only on paper. How often does this happen, and does anyone at Stable Sea own the phone call, or does the customer?
 18. **Does "operating jurisdictions" or "entity jurisdictions" drive tier?** The prototype unions both. A company operating in three countries through one entity is complex; is that right?
+
+## Surfaced by v2 (collaborators)
+
+19. **Does a document holder who uploads on the company's behalf need to be identified themselves?** The prototype gives an accountant or local director no items of their own. If anyone who touches the package must be KYC'd, every delegate adds three sensitive items and the fan-out gets more expensive, not less.
+20. **Should the customer name delegates, or should the operator?** The prototype allows both. If only the operator may, the admin's page loses its most useful control.
+21. **What happens to items already provided when a person is removed or replaced?** The prototype has no removal at all. Ownership changes mid-onboarding are real; the model needs a rule before it needs a button.
+22. **Can a re-request go to a delegate?** The prototype defaults the recipient to the entity's document holder when every item in the re-request is about that entity. Whether the banking partner accepts documents from a non-officer is question 1 again in a different coat.
