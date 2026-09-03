@@ -26,7 +26,7 @@ export function StructurePanel({ caseId, mode, actorPersonId, summary = false }:
 
   if (summary && !open) {
     return (
-      <div data-testid="structure-summary" className="flex items-center justify-between rounded border border-ink-200 bg-white px-4 py-2 text-sm">
+      <div data-testid="structure-summary" className="flex items-center justify-between rounded-[16px] bg-white px-5 py-2.5 text-sm shadow-card">
         <span>
           {mode === 'customer'
             ? `${others} ${others === 1 ? 'person is' : 'people are'} helping · ${stillToDo} still ${stillToDo === 1 ? 'has' : 'have'} things to do`
@@ -58,7 +58,7 @@ export function StructurePanel({ caseId, mode, actorPersonId, summary = false }:
         </div>
       }
     >
-      <div className="space-y-4 text-sm">
+      <div className="space-y-4 overflow-x-auto text-sm">
         {mode === 'operator' && <p className="text-xs text-ink-400">Anything added here is added on the customer's behalf and logged as the operator.</p>}
         {mode === 'customer' && (
           <p className="text-ink-600">
@@ -67,7 +67,7 @@ export function StructurePanel({ caseId, mode, actorPersonId, summary = false }:
               : 'We ask each person directly for what is theirs. You only see your own list.'}
           </p>
         )}
-        <table className="w-full">
+        <table className="w-full min-w-[520px]">
           <thead className="text-left text-xs uppercase tracking-wide text-ink-400">
             <tr>
               <th className="py-1 pr-3">Name</th>
@@ -97,7 +97,7 @@ export function StructurePanel({ caseId, mode, actorPersonId, summary = false }:
             })}
           </tbody>
         </table>
-        <table className="w-full">
+        <table className="w-full min-w-[520px]">
           <thead className="text-left text-xs uppercase tracking-wide text-ink-400">
             <tr>
               <th className="py-1 pr-3">Entity</th>

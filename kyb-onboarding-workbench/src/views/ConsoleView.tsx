@@ -1,6 +1,6 @@
-import { Badge, Button, Chip, PageHeader, caseTone } from '../components/ui'
-import { CASE_STATUS_LABEL, TIER_LABEL } from '../model/catalog'
-import { blockedOn, daysOpen, outstanding } from '../model/selectors'
+import { Badge, Button, MiniPipeline, PageHeader, cardClass } from '../components/ui'
+import { TIER_LABEL } from '../model/catalog'
+import { CASE_PHASES, blockedOn, casePhase, daysOpen, outstanding } from '../model/selectors'
 import { useDispatch, useStore } from '../state/Store'
 import { MetricsStrip } from './MetricsStrip'
 
@@ -12,23 +12,23 @@ export function ConsoleView() {
   return (
     <div>
       <PageHeader
-        title="Cases"
-        description="Every onboarding in flight, who it is waiting on, and one button to chase them."
+        title="Onboarding"
+        description="Every onboarding in flight, which phase it is in, who it is waiting on, and one button to chase them."
         actions={
           <Button variant="primary" onClick={() => dispatch({ type: 'nav', view: { kind: 'triage' } })}>
-            New case
+            + New case
           </Button>
         }
       />
       <div className="space-y-6">
         <MetricsStrip />
-        <div className="overflow-x-auto rounded border border-ink-200 bg-white">
+        <div className={`overflow-x-auto ${cardClass}`}>
           <table className="w-full text-sm">
-            <thead className="text-left text-xs uppercase tracking-wide text-ink-400">
+            <thead className="hidden text-left text-xs uppercase tracking-wide text-ink-400 md:table-header-group">
               <tr>
                 <th className="px-4 py-2.5 font-medium">Organisation</th>
                 <th className="px-4 py-2.5 font-medium">Tier</th>
-                <th className="px-4 py-2.5 font-medium">Status</th>
+                <th className="px-4 py-2.5 font-medium">Phase</th>
                 <th className="px-4 py-2.5 text-right font-medium">Days open</th>
                 <th className="px-4 py-2.5 text-right font-medium">Outstanding</th>
                 <th className="px-4 py-2.5 font-medium">Blocked on</th>
@@ -39,25 +39,23 @@ export function ConsoleView() {
                 const blocked = blockedOn(s, c.id)
                 const open = () => dispatch({ type: 'nav', view: { kind: 'case', caseId: c.id } })
                 return (
-                  <tr key={c.id} data-testid="case-row" className="cursor-pointer border-t border-ink-200 align-top hover:bg-ink-100/60" onClick={open}>
-                    <td className="px-4 py-3">
-                      <button type="button" className="font-medium text-ink-900 hover:underline" onClick={open}>
+                  <tr key={c.id} data-testid="case-row" className="block cursor-pointer border-t border-ink-100 p-4 align-top hover:bg-paper md:table-row md:p-0" onClick={open}>
+                    <td className="block md:table-cell md:px-4 md:py-3">
+                      <button type="button" className="text-base font-medium text-ink-900 hover:underline md:text-sm" onClick={open}>
                         {s.orgs[c.organizationId].legalName}
                       </button>
                     </td>
-                    <td className="px-4 py-3">
+                    <td data-label="Tier" className="block py-1 md:table-cell md:px-4 md:py-3 before:mr-2 before:text-xs before:uppercase before:tracking-wide before:text-ink-400 before:content-[attr(data-label)] md:before:content-none">
                       <Badge testId="tier-badge">{TIER_LABEL[c.tier]}</Badge>
                     </td>
-                    <td className="px-4 py-3">
-                      <Chip tone={caseTone(c.status)} testId="case-status">
-                        {CASE_STATUS_LABEL[c.status]}
-                      </Chip>
+                    <td data-label="Phase" className="block py-1 md:table-cell md:px-4 md:py-3 before:mr-2 before:text-xs before:uppercase before:tracking-wide before:text-ink-400 before:content-[attr(data-label)] md:before:content-none">
+                      <MiniPipeline steps={CASE_PHASES} {...casePhase(c)} testId="case-status" />
                     </td>
-                    <td className="px-4 py-3 text-right tabular-nums">{daysOpen(s, c)}</td>
-                    <td className="px-4 py-3 text-right tabular-nums">
+                    <td data-label="Days open" className="block py-1 md:table-cell md:px-4 md:py-3 before:mr-2 before:text-xs before:uppercase before:tracking-wide before:text-ink-400 before:content-[attr(data-label)] md:before:content-none font-mono tabular-nums md:text-right">{daysOpen(s, c)}</td>
+                    <td data-label="Outstanding" className="block py-1 md:table-cell md:px-4 md:py-3 before:mr-2 before:text-xs before:uppercase before:tracking-wide before:text-ink-400 before:content-[attr(data-label)] md:before:content-none font-mono tabular-nums md:text-right">
                       {outstanding(s, c.id)} <span className="text-ink-400">of {c.itemIds.length}</span>
                     </td>
-                    <td className="px-4 py-3" data-testid="blocked-on" onClick={(e) => e.stopPropagation()}>
+                    <td data-label="Blocked on" className="block py-1 md:table-cell md:px-4 md:py-3 before:mr-2 before:text-xs before:uppercase before:tracking-wide before:text-ink-400 before:content-[attr(data-label)] md:before:content-none md:before:hidden" data-testid="blocked-on" onClick={(e) => e.stopPropagation()}>
                       {blocked.length === 0 ? (
                         <span className="text-ink-400">Nobody</span>
                       ) : (

@@ -4,8 +4,7 @@ export async function v2({ page, check, eq, includes, t, count, reload, viewAs, 
   // second "Northwind Digital Ltd" group in the person switcher.
   const newPersonId = (name) =>
     page
-      .locator('[data-testid=person-switcher] optgroup[label="Northwind Digital Ltd"]')
-      .nth(1)
+      .locator('[data-testid=person-switcher] optgroup[label="Northwind Digital Ltd (2)"]')
       .locator('option')
       .filter({ hasText: name })
       .first()
@@ -54,7 +53,7 @@ export async function v2({ page, check, eq, includes, t, count, reload, viewAs, 
 
   await check('v2-3 operator adds an entity on the customer\'s behalf', async () => {
     await viewAs('')
-    await page.locator('[data-testid=case-row]').nth(2).getByRole('button', { name: 'Northwind Digital Ltd', exact: true }).click()
+    await page.locator('[data-testid=case-row]').nth(2).getByRole('button', { name: 'Northwind Digital Ltd (2)', exact: true }).click()
     await page.waitForSelector('[data-testid=parcel-card]')
     await page.click('[data-testid=structure-toggle]')
     await page.click('[data-testid=add-entity]')

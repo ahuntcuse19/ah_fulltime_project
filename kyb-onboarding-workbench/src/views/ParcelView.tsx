@@ -2,9 +2,9 @@
 import { useState } from 'react'
 import { ItemRow } from '../components/ItemRow'
 import { StructurePanel } from '../components/StructurePanel'
-import { Button, DemoBox, Muted, ProgressBar } from '../components/ui'
+import { Button, DemoBox, Muted, ProgressBar, Stepper, cardClass } from '../components/ui'
 import { PARTY_PHRASE, SENSITIVE_LINE } from '../model/catalog'
-import { estimateMinutes, parcelBuckets, parcelDone, personCaseSummary, personParcels, sortByCatalog, subjectName, type Bucket } from '../model/selectors'
+import { CUSTOMER_PHASES, customerPhase, estimateMinutes, parcelBuckets, parcelDone, personCaseSummary, personParcels, sortByCatalog, subjectName, type Bucket } from '../model/selectors'
 import type { Item, Parcel } from '../model/types'
 import { useDispatch, useStore } from '../state/Store'
 
@@ -19,10 +19,13 @@ export function ParcelView({ personId, caseId }: { personId: string; caseId: str
   const solo = org.personIds.length <= 1
 
   return (
-    <div className="mx-auto max-w-3xl space-y-5">
+    <div className="space-y-5">
       <DemoBox className="px-3 py-1.5">
         Demo · this is what <strong>{person.name}</strong> sees when they open their link for {org.legalName}.
       </DemoBox>
+      <div className={`${cardClass} px-4 py-3 md:px-6 md:py-4`}>
+        <Stepper steps={CUSTOMER_PHASES} current={customerPhase(s, personId, caseId)} testId="customer-stepper" />
+      </div>
       {isAdmin && !solo && <AdminStrip caseId={caseId} personId={personId} />}
       {isAdmin && <StructurePanel key={`${caseId}:${personId}`} caseId={caseId} mode="customer" actorPersonId={personId} summary />}
       {parcels.length === 0 && <p className="text-sm">Nothing is needed from you right now.</p>}
@@ -54,10 +57,10 @@ function AdminStrip({ caseId, personId }: { caseId: string; personId: string }) 
         : 'Nobody. Everything is in and being checked.'
 
   return (
-    <section data-testid="admin-strip" className="rounded border border-ink-200 bg-white p-5">
+    <section data-testid="admin-strip" className={`${cardClass} p-4 md:p-6`}>
       <div className="flex items-baseline justify-between">
-        <span className="text-lg font-semibold">{org.legalName}</span>
-        <span className="text-sm tabular-nums">
+        <span className="text-lg font-semibold text-olive-900">{org.legalName}</span>
+        <span className="font-mono text-sm tabular-nums">
           {sum.done} of {sum.total} done
         </span>
       </div>
@@ -162,17 +165,17 @@ function ParcelSection({ parcel, personId, orgName, othersNeedWork }: { parcel: 
   }
 
   return (
-    <section data-testid={parcel.isReRequest ? 'parcel-rerequest' : 'parcel-primary'} className="rounded border border-ink-200 bg-white p-6">
+    <section data-testid={parcel.isReRequest ? 'parcel-rerequest' : 'parcel-primary'} className={`${cardClass} p-4 md:p-7`}>
       {parcel.isReRequest && parcel.raisedBy && (
         <div className="mb-3">
-          <h2 className="text-lg font-semibold" data-testid="rr-title">
+          <h2 className="text-xl font-semibold text-olive-900" data-testid="rr-title">
             One more thing from our {PARTY_PHRASE[parcel.raisedBy]}
           </h2>
           <p className="text-sm text-ink-600">{parcel.reason}</p>
         </div>
       )}
       <div className="mb-4">
-        <p className="text-lg font-semibold" data-testid="parcel-header">
+        <p className="text-xl font-semibold text-olive-900" data-testid="parcel-header">
           {allDone
             ? othersNeedWork
               ? "Your original request is done. There's one more thing below."

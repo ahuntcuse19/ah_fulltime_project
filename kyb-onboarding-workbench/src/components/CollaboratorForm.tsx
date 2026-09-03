@@ -79,7 +79,7 @@ export function CollaboratorForm({ caseId, actorPersonId, mode, onClose, presetE
       <div className="space-y-4">
         {mode === 'person' ? (
           <>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <Field label="Name">
                 <input data-testid="cf-name" className={inputClass} value={name} onChange={(e) => setName(e.target.value)} />
               </Field>
@@ -98,7 +98,7 @@ export function CollaboratorForm({ caseId, actorPersonId, mode, onClose, presetE
                 ))}
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <Field label="Jurisdiction">
                 <Select data-testid="cf-jurisdiction" value={jurisdiction} onChange={(e) => setJurisdiction(e.target.value as Jurisdiction)}>
                   {JURISDICTIONS.map((j) => (
@@ -142,7 +142,7 @@ export function CollaboratorForm({ caseId, actorPersonId, mode, onClose, presetE
             <Field label="Legal name">
               <input data-testid="cf-legal-name" className={inputClass} value={legalName} onChange={(e) => setLegalName(e.target.value)} />
             </Field>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <Field label="Jurisdiction">
                 <Select data-testid="cf-jurisdiction" value={jurisdiction} onChange={(e) => setJurisdiction(e.target.value as Jurisdiction)}>
                   {JURISDICTIONS.map((j) => (

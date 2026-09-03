@@ -2,9 +2,9 @@ import { useState } from 'react'
 import { ItemRow } from '../components/ItemRow'
 import { ReRequestModal } from '../components/ReRequestModal'
 import { StructurePanel } from '../components/StructurePanel'
-import { Badge, Button, Chip, Muted, PageHeader, Panel, caseTone, parcelTone } from '../components/ui'
+import { Badge, Button, Chip, Muted, PageHeader, Panel, Stepper, caseTone, parcelTone } from '../components/ui'
 import { CASE_STATUS_LABEL, PARCEL_STATUS_LABEL, PARTY_LABEL, ROLE_LABEL, TIER_LABEL } from '../model/catalog'
-import { caseItems, caseParcels, daysOpen, outstanding, parcelProgress, relativeTime, sortByCatalog, timeline } from '../model/selectors'
+import { CASE_PHASES, caseItems, caseParcels, casePhase, daysOpen, outstanding, parcelProgress, relativeTime, sortByCatalog, timeline } from '../model/selectors'
 import type { Item } from '../model/types'
 import { useDispatch, useStore } from '../state/Store'
 
@@ -83,11 +83,14 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
         }
       />
 
+      <div className="mb-4 rounded-[16px] bg-white px-4 py-3 shadow-card md:px-5">
+        <Stepper steps={CASE_PHASES} {...casePhase(c)} testId="case-pipeline" />
+      </div>
       <div className="mb-4">
         <StructurePanel caseId={caseId} mode="operator" actorPersonId="operator" summary />
       </div>
 
-      <div className="grid grid-cols-[minmax(240px,1fr)_minmax(0,2.4fr)_minmax(240px,1fr)] gap-6">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-[236px_minmax(0,1fr)_256px]">
         <div className="space-y-4">
           <Panel title="Parcels" dense>
             <ul className="divide-y divide-ink-100">

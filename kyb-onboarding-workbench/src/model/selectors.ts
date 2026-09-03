@@ -220,3 +220,33 @@ export function metrics(s: AppState): Metrics {
 
   return { medianDays, fundedCount: funded.length, completionByTier, stalls, blockedByRole, blockedTotal: blocked.length }
 }
+
+// ---- Phases ----
+
+export const CUSTOMER_PHASES = ['Business details', 'Your documents', 'Review', 'Approved']
+export const CASE_PHASES = ['Collecting', 'In review', 'Approved', 'Funded']
+
+/** 1-based phase for one person in one case. */
+export function customerPhase(s: AppState, personId: string, caseId: string): number {
+  const c = must(s.cases, caseId)
+  if (c.status === 'approved' || c.status === 'funded') return 4
+  const mine = personParcels(s, personId, caseId)
+  if (mine.length > 0 && mine.every((p) => parcelDone(s, p.id).todo === 0) && mine.some((p) => p.submittedAt || p.status === 'complete')) return 3
+  return 2
+}
+
+/** The operator pipeline. "More info needed" is a flag on the current phase, not a phase. */
+export function casePhase(c: Case): { current: number; flag?: string } {
+  switch (c.status) {
+    case 'funded':
+      return { current: 4 }
+    case 'approved':
+      return { current: 3 }
+    case 'in_review':
+      return { current: 2 }
+    case 'more_info_needed':
+      return { current: 2, flag: 'needs more info' }
+    default:
+      return { current: 1 }
+  }
+}

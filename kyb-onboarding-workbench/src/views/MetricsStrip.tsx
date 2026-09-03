@@ -5,9 +5,9 @@ import { useStore } from '../state/Store'
 
 function Tile({ value, label, sub, testId, children }: { value: string; label: string; sub?: string; testId: string; children?: ReactNode }) {
   return (
-    <div data-testid={testId} className="rounded border border-ink-200 bg-white px-4 py-3">
+    <div data-testid={testId} className="rounded-[16px] bg-white px-5 py-4 shadow-card">
       <div className="text-xs text-ink-600">{label}</div>
-      <div className="mt-1 text-2xl font-semibold leading-none tabular-nums">{value}</div>
+      <div className="mt-1 font-mono text-2xl font-semibold leading-none tabular-nums">{value}</div>
       {sub && <div className="mt-1 text-xs text-ink-400">{sub}</div>}
       {children && <div className="mt-2 space-y-0.5 text-xs text-ink-600">{children}</div>}
     </div>
@@ -18,7 +18,7 @@ function Row({ k, v }: { k: string; v: string }) {
   return (
     <div className="flex justify-between gap-2">
       <span>{k}</span>
-      <span className="tabular-nums">{v}</span>
+      <span className="font-mono tabular-nums">{v}</span>
     </div>
   )
 }
@@ -30,7 +30,7 @@ export function MetricsStrip() {
   const doneAll = m.completionByTier.reduce((a, t) => a + t.done, 0)
   const totalAll = m.completionByTier.reduce((a, t) => a + t.total, 0)
   return (
-    <div className="grid grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:gap-4 lg:grid-cols-4">
       <Tile
         testId="metric-median"
         label="Median days to first transaction"

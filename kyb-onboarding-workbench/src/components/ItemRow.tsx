@@ -31,7 +31,7 @@ export function ItemRow({ item, mode, actorPersonId }: Props) {
   if (mode === 'operator') {
     const reviewable = item.status === 'provided' || item.status === 'in_review'
     return (
-      <li data-testid="item-row" data-status={item.status} data-key={item.requirementKey} className="grid grid-cols-[minmax(0,1fr)_112px_118px_136px] items-start gap-3 border-b border-ink-100 py-2 text-sm last:border-b-0">
+      <li data-testid="item-row" data-status={item.status} data-key={item.requirementKey} className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-3 gap-y-1 border-b border-ink-100 py-2 text-sm last:border-b-0 md:grid-cols-[minmax(0,1fr)_112px_112px_128px] md:gap-3">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-x-2">
             <span className="font-medium">{req.label}</span>
@@ -67,11 +67,11 @@ export function ItemRow({ item, mode, actorPersonId }: Props) {
             </div>
           )}
         </div>
-        <div className="truncate text-xs text-ink-600">{s.people[item.assignedPersonId]?.name}</div>
+        <div className="order-3 text-xs text-ink-600 md:order-none md:truncate">{s.people[item.assignedPersonId]?.name}</div>
         <div>
           <Chip tone={itemTone(item.status)}>{ITEM_STATUS_LABEL[item.status]}</Chip>
         </div>
-        <div className="flex justify-end gap-1">
+        <div className="order-4 col-span-2 flex justify-end gap-1 md:order-none md:col-span-1">
           {reviewable && (
             <>
               <Button size="sm" data-testid="accept-item" onClick={() => dispatch({ type: 'item/accept', itemId: item.id })}>
@@ -95,7 +95,7 @@ export function ItemRow({ item, mode, actorPersonId }: Props) {
         <>
           <input
             type={req.key === 'tax_id' ? 'password' : 'text'}
-            className={`${inputClass} max-w-md`}
+            className={`${inputClass} md:max-w-md`}
             value={draft}
             placeholder={req.key === 'tax_id' ? 'Entered here, not stored in this prototype' : (PLACEHOLDER[req.key] ?? '')}
             onChange={(e) => setDraft(e.target.value)}

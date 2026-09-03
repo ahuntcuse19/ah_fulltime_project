@@ -10,11 +10,11 @@ The bottleneck is people rather than documents: a linear form asks one responden
 
 ## What is fake
 
-Everything. No backend, no auth, no verification, no compliance logic. A file input records a filename. State lives in one reducer; refresh resets it to seed. Emails are lines in an event log. The requirement catalog contains only what Stable Sea described; requirements tagged "assumed" in the operator view are the ones most likely to be wrong.
+Everything. No backend, no auth, no verification, no compliance logic. A file input records a filename. One reducer holds state; refresh resets it. Emails are event-log lines. The requirement catalog contains only what Stable Sea described; requirements tagged "assumed" in the operator view are the ones most likely to be wrong. Type and colour follow Stable Sea Terminal by request; no name, logo, shell or artwork is reproduced.
 
 ## What I would want to know
 
-See [OPEN_QUESTIONS.md](OPEN_QUESTIONS.md); the first question is the strongest objection to the whole model. [MODEL.md](MODEL.md) states the model without the code. [DEMO_SCRIPT.md](DEMO_SCRIPT.md) is a ten-minute walkthrough keyed to the seed.
+See [OPEN_QUESTIONS.md](OPEN_QUESTIONS.md); question one is the strongest objection to the model. [MODEL.md](MODEL.md) states the model without code; [DEMO_SCRIPT.md](DEMO_SCRIPT.md) is the ten-minute walkthrough.
 
 ## Run it
 

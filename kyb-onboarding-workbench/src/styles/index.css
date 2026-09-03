@@ -1,21 +1,35 @@
 @import 'tailwindcss';
+@import '@fontsource/poppins/400.css';
+@import '@fontsource/poppins/500.css';
+@import '@fontsource/poppins/600.css';
 
+/* Tokens read off the Stable Sea Terminal screenshots. No logo, no artwork. */
 @theme {
-  --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-sans: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
 
-  --color-ink-900: #1a1d21;
-  --color-ink-600: #4b5563;
-  --color-ink-400: #9ca3af;
-  --color-ink-200: #e5e7eb;
-  --color-ink-100: #f3f4f6;
-  --color-paper: #fafaf9;
+  --color-ink-900: #1a1a1a;
+  --color-ink-600: #6b6b6b;
+  --color-ink-400: #9a9a9a;
+  --color-ink-200: #e3e3e0;
+  --color-ink-100: #f0f0ee;
+  --color-paper: #f4f4f2;
+  --color-paper-dim: #e9ecef;
 
-  --color-accent-600: #3b5b8c;
-  --color-accent-100: #e8eef7;
-  --color-ok-600: #2f7a4f;
-  --color-ok-100: #e6f3ea;
+  --color-olive-900: #3b3a14;
+  --color-olive-700: #4a4820;
+
+  --color-accent-600: #3d5afe;
+  --color-accent-100: #e8ecff;
+  --color-ok-600: #2f6b1a;
+  --color-ok-100: #dff5c8;
   --color-warn-600: #9a6300;
   --color-warn-100: #fbf1d9;
+  --color-violet-500: #7c4dff;
+  --color-teal-700: #1f5f6b;
+
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.04), 0 12px 32px rgb(0 0 0 / 0.06);
+  --radius-card: 16px;
 }
 
 body {

@@ -1,7 +1,8 @@
-import { useMemo, useState } from 'react'
-import { Button, DemoBox, Field, PageHeader, inputClass } from '../components/ui'
+import React, { useMemo, useState } from 'react'
+import { Button, Field, Stepper, cardClass, inputClass } from '../components/ui'
 import { JURISDICTION_NAME, TRIAGE_HELP } from '../model/catalog'
 import { assignParcels, instantiateCase } from '../model/rules'
+import { CUSTOMER_PHASES } from '../model/selectors'
 import { JURISDICTIONS, type CountBand, type Jurisdiction, type LegalEntity, type Organization, type Person, type TriageAnswers } from '../model/types'
 import { useDispatch, useStore } from '../state/Store'
 import { ACME, NORTHWIND, reidFixture, type Fixture } from '../state/seed'
@@ -112,10 +113,16 @@ export function TriageView() {
   const draft = useMemo(() => {
     let n = s.seq
     const seq = () => ++n
-    if (form.preset === 'acme') return reidFixture(ACME, seq)
-    if (form.preset === 'northwind') return reidFixture(NORTHWIND, seq)
+    // A preset re-run makes a second case for the same company; number it so
+    // nothing in the demo shows two identical names.
+    const suffixFor = (base: string) => {
+      const existing = Object.values(s.orgs).filter((o) => o.legalName === base || o.legalName.startsWith(`${base} (`)).length
+      return existing === 0 ? '' : ` (${existing + 1})`
+    }
+    if (form.preset === 'acme') return reidFixture(ACME, seq, suffixFor(ACME.org.legalName))
+    if (form.preset === 'northwind') return reidFixture(NORTHWIND, seq, suffixFor(NORTHWIND.org.legalName))
     return draftFromForm(form, seq)
-  }, [form, s.seq])
+  }, [form, s.seq, s.orgs])
 
   const summary = useMemo(() => {
     let n = 0
@@ -141,10 +148,9 @@ export function TriageView() {
   if (step === 2) {
     const most = summary.prefilled >= Math.ceil(summary.adminItems / 2)
     return (
-      <div className="mx-auto max-w-2xl">
-        <PageHeader eyebrow="Step 2 of 2 · What we'll need" title="Here is the whole picture before anyone starts" />
+      <TwoPanel phase={1} note="Nothing has been sent yet. When you create the case, each person below gets their own request.">
         <div className="space-y-6">
-        <h2 className="text-lg font-semibold" data-testid="triage-summary">
+        <h2 className="text-xl font-semibold text-olive-900" data-testid="triage-summary">
           Based on your answers we need <strong>{summary.total}</strong> items from <strong>{summary.people}</strong>{' '}
           {summary.people === 1 ? 'person' : 'people'}.{' '}
           {most ? 'Most of what we need from you is available now.' : `${summary.prefilled} of these are already on file and only need your confirmation.`}
@@ -154,7 +160,7 @@ export function TriageView() {
             ? `All of them are yours (${summary.prefilled} already on file, just confirm them).`
             : `${summary.adminItems} of these are yours (${summary.prefilled} already on file, just confirm them). We'll ask the other ${summary.people - 1} ${summary.people - 1 === 1 ? 'person' : 'people'} directly; you don't need to collect anything from them.`}
         </p>
-        <table className="w-full rounded border border-ink-200 bg-white text-sm">
+        <table className="w-full overflow-hidden rounded-[10px] border border-ink-200 text-sm">
           <thead className="bg-ink-100 text-left text-xs uppercase tracking-wide text-ink-600">
             <tr>
               <th className="px-3 py-2">Who</th>
@@ -178,7 +184,7 @@ export function TriageView() {
         <div className="flex gap-2">
           <Button onClick={() => setStep(1)}>Back</Button>
           <Button
-            variant="primary"
+            variant="olive"
             data-testid="triage-create"
             onClick={() => dispatch({ type: 'triage/confirm', answers: draft.answers, org: draft.org, entities: draft.entities, people: draft.people })}
           >
@@ -186,31 +192,36 @@ export function TriageView() {
           </Button>
         </div>
         </div>
-      </div>
+      </TwoPanel>
     )
   }
 
   return (
-    <div className="mx-auto max-w-2xl">
-      <PageHeader eyebrow="Step 1 of 2 · About the business" title="Four questions, then we show you exactly what we'll need" />
-      <DemoBox className="mb-4 flex items-center gap-2 px-3 py-2">
-        <span className="font-medium text-warn-600">Demo</span>
-        <span>prefill as</span>
-        <Button size="sm" variant="ghost" data-testid="preset-acme" onClick={() => setForm(fromFixture(ACME, 'acme'))}>
-          Acme
-        </Button>
-        <Button size="sm" variant="ghost" data-testid="preset-northwind" onClick={() => setForm(fromFixture(NORTHWIND, 'northwind'))}>
-          Northwind
-        </Button>
-      </DemoBox>
-      <div className="space-y-5 rounded border border-ink-200 bg-white p-6">
+    <TwoPanel
+      phase={1}
+      note="Four questions, then we show you exactly what we'll need and from whom."
+      presets={
+        <span className="flex items-center gap-1 text-xs text-ink-400">
+          Demo · prefill as
+          <Button size="sm" variant="ghost" data-testid="preset-acme" onClick={() => setForm(fromFixture(ACME, 'acme'))}>
+            Acme
+          </Button>
+          <Button size="sm" variant="ghost" data-testid="preset-northwind" onClick={() => setForm(fromFixture(NORTHWIND, 'northwind'))}>
+            Northwind
+          </Button>
+        </span>
+      }
+    >
+      <h2 className="text-2xl font-semibold text-olive-900">Tell us about your business</h2>
+      <p className="mt-1 mb-6 text-sm text-ink-600">Four questions. We'll work out what's needed and ask each person directly.</p>
+      <div className="space-y-5">
         <Field label="Organisation legal name">
           <input className={inputClass} value={form.orgName} onChange={(e) => edit({ orgName: e.target.value })} />
         </Field>
         <Field label="EIN (optional)" hint="Prefill works for EINs the fake registry knows; the real one would be a lookup.">
           <input className={inputClass} value={form.ein} onChange={(e) => edit({ ein: e.target.value })} />
         </Field>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <Field label="Admin name">
             <input className={inputClass} value={form.adminName} onChange={(e) => edit({ adminName: e.target.value })} />
           </Field>
@@ -221,8 +232,8 @@ export function TriageView() {
         <RadioRow label="How many legal entities?" hint={TRIAGE_HELP.entities} value={form.entityBand} options={['1', '2-3', '4+']} onChange={(v) => edit({ entityBand: v as CountBand })} />
         <RadioRow label="How many individuals own 25% or more?" hint={TRIAGE_HELP.ubos} value={form.uboBand} options={['1', '2-3', '4+']} onChange={(v) => edit({ uboBand: v as CountBand })} />
         <div className="text-sm">
-          <span className="block font-medium">Which countries do you operate in?</span>
-          <span className="mb-1 block text-xs text-ink-400">{TRIAGE_HELP.jurisdictions}</span>
+          <span className="block font-semibold">Which countries do you operate in?</span>
+          <span className="mb-2 block text-xs text-ink-400">{TRIAGE_HELP.jurisdictions}</span>
           <div className="flex flex-wrap gap-4">
             {JURISDICTIONS.map((j) => (
               <label key={j} className="flex items-center gap-1">
@@ -232,27 +243,50 @@ export function TriageView() {
           </div>
         </div>
         <RadioRow label="Are you a money services business?" hint={TRIAGE_HELP.msb} value={form.isMsb ? 'Yes' : 'No'} options={['Yes', 'No']} onChange={(v) => edit({ isMsb: v === 'Yes' })} />
-        <div className="flex justify-end border-t border-ink-200 pt-4">
-          <Button variant="primary" disabled={!ready} data-testid="triage-continue" onClick={() => setStep(2)}>
-            Continue
-          </Button>
-        </div>
+        <p className="text-xs text-ink-400">By continuing you agree to receive updates about your application. We never share your information.</p>
+        <Button variant="olive" size="lg" className="w-full" disabled={!ready} data-testid="triage-continue" onClick={() => setStep(2)}>
+          Continue
+        </Button>
       </div>
-    </div>
+    </TwoPanel>
   )
 }
 
 function RadioRow({ label, hint, value, options, onChange }: { label: string; hint?: string; value: string; options: string[]; onChange: (v: string) => void }) {
   return (
     <div className="text-sm">
-      <span className="block font-medium">{label}</span>
-      {hint && <span className="mb-1 block text-xs text-ink-400">{hint}</span>}
+      <span className="block font-semibold">{label}</span>
+      {hint && <span className="mb-2 block text-xs text-ink-400">{hint}</span>}
       <div className="flex gap-4">
         {options.map((o) => (
           <label key={o} className="flex items-center gap-1">
             <input type="radio" name={label} checked={value === o} onChange={() => onChange(o)} /> {o}
           </label>
         ))}
+      </div>
+    </div>
+  )
+}
+
+/** The sign-up card: form on the left, the phase list where the artwork sits. */
+function TwoPanel({ children, phase, note, presets }: { children: React.ReactNode; phase: number; note: string; presets?: React.ReactNode }) {
+  return (
+    <div>
+      {presets && <div className="mb-3 flex justify-end">{presets}</div>}
+      <div className={`grid grid-cols-1 overflow-hidden ${cardClass} rounded-[24px] md:grid-cols-[minmax(0,1fr)_340px]`}>
+        <div className="order-2 p-5 md:order-1 md:p-10">{children}</div>
+        <aside className="order-1 flex flex-col justify-between bg-paper-dim p-5 md:order-2 md:p-8" data-testid="phase-panel">
+          <div>
+            <div className="mb-3 text-xs font-medium uppercase tracking-wide text-ink-400 md:mb-6">Your onboarding</div>
+            <div className="hidden md:block">
+              <Stepper steps={CUSTOMER_PHASES} current={phase} orientation="vertical" />
+            </div>
+            <div className="md:hidden">
+              <Stepper steps={CUSTOMER_PHASES} current={phase} />
+            </div>
+          </div>
+          <p className="mt-3 text-xs text-ink-600 md:mt-0">{note}</p>
+        </aside>
       </div>
     </div>
   )
