@@ -19,6 +19,8 @@ export async function v2({ page, check, eq, includes, t, count, reload, viewAs, 
     await page.click('[data-testid=triage-create]')
     await viewAs(await newPersonId('Dana Whitfield'))
     await page.waitForSelector('[data-testid=parcel-primary]')
+    includes(await t('[data-testid=structure-summary]'), '5 people are helping', 'structure summary')
+    await page.click('[data-testid=structure-toggle]')
     const peopleBefore = await count('[data-testid=structure-person]')
     eq(peopleBefore, 6, 'people before')
     eq(await count('[data-testid=parcel-primary] [data-testid=item-row]'), 32, 'admin rows before')
@@ -32,7 +34,7 @@ export async function v2({ page, check, eq, includes, t, count, reload, viewAs, 
     await page.click('[data-testid=cf-submit]')
     eq(await count('[data-testid=parcel-primary] [data-testid=item-row]'), 32, 'admin rows unchanged')
     eq(await count('[data-testid=structure-person]'), peopleBefore + 1, 'people table')
-    includes(await page.locator('[data-testid=structure-person]').last().innerText(), 'Sent', 'new request sent')
+    includes(await page.locator('[data-testid=structure-person]').last().innerText(), 'Not started', 'new request sent')
   })
 
   await check('v2-2 delegation moves only movable items', async () => {

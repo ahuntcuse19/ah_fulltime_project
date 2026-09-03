@@ -4,6 +4,7 @@ import type {
   CaseStatus,
   DownstreamParty,
   ItemStatus,
+  Jurisdiction,
   ParcelStatus,
   PersonRole,
   Requirement,
@@ -102,3 +103,50 @@ export const ROLE_LABEL: Record<PersonRole, string> = {
 }
 
 export const DOWNSTREAM_PARTIES: DownstreamParty[] = ['internal_compliance', 'bank_partner', 'asset_manager']
+
+// ---- Customer-facing vocabulary. Operator views keep the maps above. ----
+
+export const CUSTOMER_ITEM_STATUS_LABEL: Record<ItemStatus, string> = {
+  not_started: 'To do',
+  prefilled_unconfirmed: 'Check and confirm',
+  provided: 'Sent',
+  in_review: 'Being checked',
+  accepted: 'Done',
+  more_info_needed: 'Needs another look',
+}
+
+export const PLACEHOLDER: Partial<Record<RequirementKey, string>> = {
+  legal_name: 'As it appears on the registration',
+  ein: 'e.g. 12-3456789',
+  registered_address: 'Street, city, state, ZIP',
+  business_description: 'What the business does, in a sentence',
+  expected_volumes: 'e.g. $150,000 per month',
+  bank_account: 'e.g. bank name and last four digits',
+  entity_registration_number: 'The number on the registry record',
+  entity_registered_address: 'Street, city, postcode',
+  ownership_percent: 'e.g. 25',
+}
+
+export const JURISDICTION_NAME: Record<Jurisdiction, string> = {
+  US: 'United States',
+  SG: 'Singapore',
+  MX: 'Mexico',
+  BR: 'Brazil',
+  GB: 'United Kingdom',
+  DE: 'Germany',
+}
+
+export const TRIAGE_HELP = {
+  entities: 'Companies, LLCs or subsidiaries that will be part of this account.',
+  ubos: 'Including you, if you own 25% or more.',
+  jurisdictions: 'Where the business is registered or does business.',
+  msb: 'You move money for customers, for example payments, remittances or currency exchange.',
+}
+
+export const CUSTOMER_PARCEL_STATUS_LABEL: Record<ParcelStatus, string> = {
+  not_sent: 'Not sent',
+  sent: 'Not started',
+  in_progress: 'In progress',
+  submitted: 'Being checked',
+  complete: 'Done',
+}

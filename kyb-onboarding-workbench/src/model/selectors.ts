@@ -56,10 +56,40 @@ export function parcelProgress(s: AppState, parcelId: string): { accepted: numbe
   return { accepted: items.filter((it) => it.status === 'accepted').length, total: items.length }
 }
 
-/** A person's parcels in a case: primary first, then re-requests in creation order. */
+export type Bucket = 'todo' | 'checking' | 'done'
+
+export function bucketOf(status: Item['status']): Bucket {
+  if (status === 'accepted') return 'done'
+  if (status === 'provided' || status === 'in_review') return 'checking'
+  return 'todo'
+}
+
+export function parcelBuckets(s: AppState, parcelId: string): Record<Bucket, Item[]> {
+  const out: Record<Bucket, Item[]> = { todo: [], checking: [], done: [] }
+  parcelItems(s, parcelId).forEach((it) => out[bucketOf(it.status)].push(it))
+  return out
+}
+
+export function parcelDone(s: AppState, parcelId: string): { done: number; total: number; todo: number } {
+  const b = parcelBuckets(s, parcelId)
+  return { done: b.done.length, total: b.done.length + b.checking.length + b.todo.length, todo: b.todo.length }
+}
+
+/** A person's parcels in a case: anything still needing their work first, then primary before re-requests. */
 export function personParcels(s: AppState, personId: string, caseId: string): Parcel[] {
   const mine = caseParcels(s, caseId).filter((p) => p.personId === personId)
-  return [...mine.filter((p) => !p.isReRequest), ...mine.filter((p) => p.isReRequest)]
+  const rank = (p: Parcel) => (parcelDone(s, p.id).todo > 0 ? 0 : 1) * 2 + (p.isReRequest ? 1 : 0)
+  return [...mine].sort((a, b) => rank(a) - rank(b))
+}
+
+/** What the admin needs to see: the whole case, not just their own parcel. */
+export function personCaseSummary(s: AppState, personId: string, caseId: string): { done: number; total: number; waitingOn: (BlockedPerson & { isSelf: boolean })[] } {
+  const items = caseItems(s, caseId)
+  return {
+    done: items.filter((it) => it.status === 'accepted').length,
+    total: items.length,
+    waitingOn: blockedOn(s, caseId).map((b) => ({ ...b, isSelf: b.personId === personId })),
+  }
 }
 
 export function estimateMinutes(s: AppState, parcelId: string): number {

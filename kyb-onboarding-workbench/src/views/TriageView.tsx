@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
-import { Button, Chip, Field, inputClass } from '../components/ui'
-import { ROLE_LABEL, TIER_LABEL } from '../model/catalog'
-import { assignParcels, computeTier, instantiateCase, structureCounts } from '../model/rules'
+import { Button, Field, inputClass } from '../components/ui'
+import { JURISDICTION_NAME, TRIAGE_HELP } from '../model/catalog'
+import { assignParcels, instantiateCase } from '../model/rules'
 import { JURISDICTIONS, type CountBand, type Jurisdiction, type LegalEntity, type Organization, type Person, type TriageAnswers } from '../model/types'
 import { useDispatch, useStore } from '../state/Store'
 import { ACME, NORTHWIND, reidFixture, type Fixture } from '../state/seed'
@@ -127,13 +127,12 @@ export function TriageView() {
     const admin = draft.people.find((p) => p.roles.includes('admin'))!
     const prefilled = items.filter((it) => it.status === 'prefilled_unconfirmed').length
     const adminItems = items.filter((it) => it.assignedPersonId === admin.id).length
-    const tier = computeTier(structureCounts(draft.org, draft.entities, draft.people))
     const rows = parcels.map((p) => {
       const person = people[p.personId]
       const mine = items.filter((it) => it.assignedPersonId === p.personId)
       return { person, count: mine.length, prefilled: mine.filter((it) => it.status === 'prefilled_unconfirmed').length }
     })
-    return { total: items.length, people: parcels.length, prefilled, adminItems, tier, rows }
+    return { total: items.length, people: parcels.length, prefilled, adminItems, rows }
   }, [draft])
 
   const toggleJurisdiction = (j: Jurisdiction) =>
@@ -148,22 +147,27 @@ export function TriageView() {
           {summary.people === 1 ? 'person' : 'people'}.{' '}
           {most ? 'Most of what we need from you is available now.' : `${summary.prefilled} of these are already on file and only need your confirmation.`}
         </h1>
-        <Chip tone={summary.tier === 'complex' ? 'warn' : summary.tier === 'standard' ? 'accent' : 'grey'}>{TIER_LABEL[summary.tier]} case</Chip>
+        <p className="text-base text-ink-600" data-testid="triage-reassurance">
+          {summary.people === 1
+            ? `All of them are yours (${summary.prefilled} already on file, just confirm them).`
+            : `${summary.adminItems} of these are yours (${summary.prefilled} already on file, just confirm them). We'll ask the other ${summary.people - 1} ${summary.people - 1 === 1 ? 'person' : 'people'} directly; you don't need to collect anything from them.`}
+        </p>
         <table className="w-full rounded border border-ink-200 bg-white text-sm">
           <thead className="bg-ink-100 text-left text-xs uppercase tracking-wide text-ink-600">
             <tr>
-              <th className="px-3 py-2">Name</th>
-              <th className="px-3 py-2">Roles</th>
-              <th className="px-3 py-2">Items</th>
-              <th className="px-3 py-2">Of which pre-filled</th>
+              <th className="px-3 py-2">Who</th>
+              <th className="px-3 py-2">What we'll ask them for</th>
+              <th className="px-3 py-2">Already on file</th>
             </tr>
           </thead>
           <tbody>
             {summary.rows.map((r) => (
               <tr key={r.person.id} className="border-t border-ink-200">
-                <td className="px-3 py-2">{r.person.name}</td>
-                <td className="px-3 py-2 text-ink-600">{r.person.roles.map((x) => ROLE_LABEL[x]).join(', ')}</td>
-                <td className="px-3 py-2 tabular-nums">{r.count}</td>
+                <td className="px-3 py-2">
+                  {r.person.name}
+                  {r.person.roles.includes('admin') && <span className="ml-1 text-xs text-ink-400">(you)</span>}
+                </td>
+                <td className="px-3 py-2 tabular-nums">{r.count} items</td>
                 <td className="px-3 py-2 tabular-nums">{r.prefilled}</td>
               </tr>
             ))}
@@ -186,7 +190,7 @@ export function TriageView() {
   return (
     <div className="mx-auto max-w-2xl space-y-6">
       <div className="flex items-center gap-2">
-        <span className="text-xs text-ink-400">Presets:</span>
+        <span className="text-xs text-ink-400">Demo:</span>
         <Button size="sm" data-testid="preset-acme" onClick={() => setForm(fromFixture(ACME, 'acme'))}>
           Prefill as Acme
         </Button>
@@ -209,19 +213,20 @@ export function TriageView() {
             <input className={inputClass} value={form.adminEmail} onChange={(e) => edit({ adminEmail: e.target.value })} />
           </Field>
         </div>
-        <RadioRow label="How many legal entities?" value={form.entityBand} options={['1', '2-3', '4+']} onChange={(v) => edit({ entityBand: v as CountBand })} />
-        <RadioRow label="How many individuals own 25% or more?" value={form.uboBand} options={['1', '2-3', '4+']} onChange={(v) => edit({ uboBand: v as CountBand })} />
+        <RadioRow label="How many legal entities?" hint={TRIAGE_HELP.entities} value={form.entityBand} options={['1', '2-3', '4+']} onChange={(v) => edit({ entityBand: v as CountBand })} />
+        <RadioRow label="How many individuals own 25% or more?" hint={TRIAGE_HELP.ubos} value={form.uboBand} options={['1', '2-3', '4+']} onChange={(v) => edit({ uboBand: v as CountBand })} />
         <div className="text-sm">
-          <span className="mb-1 block font-medium">Which jurisdictions do you operate in?</span>
-          <div className="flex gap-4">
+          <span className="block font-medium">Which countries do you operate in?</span>
+          <span className="mb-1 block text-xs text-ink-400">{TRIAGE_HELP.jurisdictions}</span>
+          <div className="flex flex-wrap gap-4">
             {JURISDICTIONS.map((j) => (
               <label key={j} className="flex items-center gap-1">
-                <input type="checkbox" checked={form.jurisdictions.includes(j)} onChange={() => toggleJurisdiction(j)} /> {j}
+                <input type="checkbox" checked={form.jurisdictions.includes(j)} onChange={() => toggleJurisdiction(j)} /> {JURISDICTION_NAME[j]}
               </label>
             ))}
           </div>
         </div>
-        <RadioRow label="Are you a money services business?" value={form.isMsb ? 'Yes' : 'No'} options={['Yes', 'No']} onChange={(v) => edit({ isMsb: v === 'Yes' })} />
+        <RadioRow label="Are you a money services business?" hint={TRIAGE_HELP.msb} value={form.isMsb ? 'Yes' : 'No'} options={['Yes', 'No']} onChange={(v) => edit({ isMsb: v === 'Yes' })} />
       </div>
       <Button variant="primary" disabled={!ready} data-testid="triage-continue" onClick={() => setStep(2)}>
         Continue
@@ -230,10 +235,11 @@ export function TriageView() {
   )
 }
 
-function RadioRow({ label, value, options, onChange }: { label: string; value: string; options: string[]; onChange: (v: string) => void }) {
+function RadioRow({ label, hint, value, options, onChange }: { label: string; hint?: string; value: string; options: string[]; onChange: (v: string) => void }) {
   return (
     <div className="text-sm">
-      <span className="mb-1 block font-medium">{label}</span>
+      <span className="block font-medium">{label}</span>
+      {hint && <span className="mb-1 block text-xs text-ink-400">{hint}</span>}
       <div className="flex gap-4">
         {options.map((o) => (
           <label key={o} className="flex items-center gap-1">

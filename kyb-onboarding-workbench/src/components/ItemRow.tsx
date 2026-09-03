@@ -1,17 +1,17 @@
 import { useState } from 'react'
 import { Button, Chip, Muted, inputClass, itemTone } from '../components/ui'
-import { ITEM_STATUS_LABEL, REQ_BY_KEY, SENSITIVE_LINE } from '../model/catalog'
+import { CUSTOMER_ITEM_STATUS_LABEL, ITEM_STATUS_LABEL, PLACEHOLDER, REQ_BY_KEY } from '../model/catalog'
 import type { Item } from '../model/types'
 import { useDispatch, useStore } from '../state/Store'
 
 interface Props {
   item: Item
   mode: 'operator' | 'customer'
-  orgName: string
+  orgName?: string
   actorPersonId?: string
 }
 
-export function ItemRow({ item, mode, orgName, actorPersonId }: Props) {
+export function ItemRow({ item, mode, actorPersonId }: Props) {
   const s = useStore()
   const dispatch = useDispatch()
   const req = REQ_BY_KEY[item.requirementKey]
@@ -37,7 +37,7 @@ export function ItemRow({ item, mode, orgName, actorPersonId }: Props) {
             type={req.key === 'tax_id' ? 'password' : 'text'}
             className={inputClass}
             value={draft}
-            placeholder={req.key === 'tax_id' ? 'Not stored in this prototype' : ''}
+            placeholder={req.key === 'tax_id' ? 'Entered here, not stored in this prototype' : (PLACEHOLDER[req.key] ?? '')}
             onChange={(e) => setDraft(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && provide(draft)}
           />
@@ -57,10 +57,9 @@ export function ItemRow({ item, mode, orgName, actorPersonId }: Props) {
             <span className="text-sm font-medium">{req.label}</span>
             {mode === 'operator' && req.provenance === 'assumed' && <Muted>assumed</Muted>}
             {mode === 'operator' && <Muted>→ {s.people[item.assignedPersonId]?.name}</Muted>}
-            <Chip tone={itemTone(item.status)}>{ITEM_STATUS_LABEL[item.status]}</Chip>
+            <Chip tone={itemTone(item.status)}>{mode === 'customer' ? CUSTOMER_ITEM_STATUS_LABEL[item.status] : ITEM_STATUS_LABEL[item.status]}</Chip>
           </div>
           {mode === 'customer' && <div className="text-xs text-ink-600">{req.helpText}</div>}
-          {mode === 'customer' && req.sensitive && <div className="mt-0.5 text-xs text-ink-400">{SENSITIVE_LINE(orgName)}</div>}
 
           {item.reviewerNote && (
             <div className="mt-1 rounded border border-warn-600/30 bg-warn-100 px-2 py-1 text-xs text-warn-600" data-testid="reviewer-note">

@@ -62,7 +62,7 @@ export type Action =
       newItems: NewItemSpec[]
       moveItemIds: string[]
     }
-  | { type: 'case/nudge'; caseId: string; personId: string }
+  | { type: 'case/nudge'; caseId: string; personId: string; actorPersonId?: Actor }
   | { type: 'case/approve'; caseId: string }
   | { type: 'case/fund'; caseId: string }
   | { type: 'nav'; view: View }
@@ -383,8 +383,14 @@ export function reducer(state: AppState, action: Action): AppState {
       if (!c || !person) return state
       const k = c.itemIds.map((id) => state.items[id]).filter((it) => it.assignedPersonId === person.id && it.status !== 'accepted').length
       if (k === 0) return state
+      const actor = action.actorPersonId ?? 'operator'
+      if (actor !== 'operator') {
+        const by = state.people[actor]
+        if (!by || by.organizationId !== c.organizationId || !by.roles.includes('admin') || by.id === person.id) return state
+      }
       const d = clone(state)
-      pushLog(d, c.id, 'operator', `Nudged ${person.name} about ${k} outstanding items.`)
+      if (actor === 'operator') pushLog(d, c.id, 'operator', `Nudged ${person.name} about ${k} outstanding items.`)
+      else pushLog(d, c.id, actorName(d, actor), `Reminded ${person.name} about ${k} outstanding items.`)
       return d
     }
 

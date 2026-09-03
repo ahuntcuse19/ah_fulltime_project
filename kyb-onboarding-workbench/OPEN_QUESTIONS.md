@@ -35,3 +35,8 @@ Every point where the prototype had to guess at something only Stable Sea would 
 20. **Should the customer name delegates, or should the operator?** The prototype allows both. If only the operator may, the admin's page loses its most useful control.
 21. **What happens to items already provided when a person is removed or replaced?** The prototype has no removal at all. Ownership changes mid-onboarding are real; the model needs a rule before it needs a button.
 22. **Can a re-request go to a delegate?** The prototype defaults the recipient to the entity's document holder when every item in the re-request is about that entity. Whether the banking partner accepts documents from a non-officer is question 1 again in a different coat.
+
+## Surfaced by the business-owner audit
+
+23. **What is the real review turnaround?** After submitting, the customer page says "We'll email you when that's done" and deliberately promises no time. If Stable Sea can commit to a number, it belongs on that line; if it varies by tier, the count screen should say so.
+24. **Should the admin be able to remind the other people themselves?** The prototype lets the admin press Remind next to each name the account is waiting on. That moves chasing from Stable Sea to the customer, which may be exactly right or may look like passing the buck.

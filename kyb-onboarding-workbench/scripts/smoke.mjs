@@ -133,7 +133,7 @@ await check('5 pre-filled values confirmable; finish Acme; metric flips', async 
   eq(await rows.locator('[data-testid=confirm-item]').count(), 5, 'confirm buttons')
   eq(await rows.locator('input[type=text]').count(), 0, 'no empty inputs')
   await page.click('[data-testid=confirm-all-submit]')
-  eq(await t('[data-testid=parcel-chip]'), 'Submitted', 'parcel chip')
+  includes(await t('[data-testid=parcel-header]'), 'being checked', 'post-submit header')
   await viewAs('')
   await openCase('Acme Fabrication LLC')
   includes(await t('[data-testid=accept-all]'), '(6)', 'accept all count')
@@ -149,6 +149,34 @@ await check('6 reload resets to seed', async () => {
   await reload()
   eq(await count('[data-testid=case-row]'), 2, 'case rows')
   eq((await page.locator('[data-testid=case-status]').allInnerTexts())[1], 'Collecting', 'Acme status')
+})
+
+await check('7 admin sees the whole account and can remind', async () => {
+  await reload()
+  await viewAs('per_nw_admin')
+  await page.waitForSelector('[data-testid=admin-strip]')
+  const strip = await t('[data-testid=admin-strip]')
+  for (const name of ['Mei Lin Tan', 'Rafael Costa', 'Lucía Herrera']) includes(strip, name, 'waiting on')
+  includes(strip, '37 of 52 done', 'case progress')
+  await page.click('[data-testid=remind-per_nw_ubo_br]')
+  await viewAs('')
+  await openCase('Northwind Digital Ltd')
+  includes(await t('[data-testid=timeline-entry]'), 'Dana Whitfield Reminded Rafael Costa', 'remind logged')
+})
+
+await check('8 progress: to-do first, done collapsed, count screen reassures', async () => {
+  await reload()
+  await viewAs('per_acme_jordan')
+  await page.waitForSelector('[data-testid=parcel-primary]')
+  includes(await t('[data-testid=parcel-header]'), '10 of 16 done', 'progress header')
+  eq(await count('[data-testid=bucket-todo] [data-testid=item-row]'), 5, 'to-do rows')
+  eq(await count('[data-testid=bucket-done] [data-testid=item-row]'), 0, 'done collapsed')
+  await page.click('[data-testid=done-toggle]')
+  eq(await count('[data-testid=bucket-done] [data-testid=item-row]'), 10, 'done expanded')
+  await page.click('[data-testid=nav-triage]')
+  await page.click('[data-testid=preset-northwind]')
+  await page.click('[data-testid=triage-continue]')
+  includes(await t('[data-testid=triage-reassurance]'), "We'll ask the other 5 people directly", 'reassurance')
 })
 
 if (process.env.SMOKE_V2 !== '0') {

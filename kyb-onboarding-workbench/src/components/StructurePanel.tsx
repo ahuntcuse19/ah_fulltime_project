@@ -3,8 +3,8 @@
 import { useState } from 'react'
 import { CollaboratorForm } from './CollaboratorForm'
 import { Button, Chip, Panel, parcelTone } from './ui'
-import { PARCEL_STATUS_LABEL, ROLE_LABEL } from '../model/catalog'
-import { parcelProgress, personParcels, structure } from '../model/selectors'
+import { CUSTOMER_PARCEL_STATUS_LABEL, PARCEL_STATUS_LABEL, ROLE_LABEL } from '../model/catalog'
+import { blockedOn, parcelProgress, personParcels, structure } from '../model/selectors'
 import { useStore } from '../state/Store'
 import type { Actor } from '../state/reducer'
 
@@ -12,19 +12,42 @@ interface Props {
   caseId: string
   mode: 'customer' | 'operator'
   actorPersonId: Actor
+  summary?: boolean // customer mode: collapse to one line unless the admin is alone
 }
 
-export function StructurePanel({ caseId, mode, actorPersonId }: Props) {
+export function StructurePanel({ caseId, mode, actorPersonId, summary = false }: Props) {
   const s = useStore()
   const [form, setForm] = useState<{ mode: 'person' | 'entity'; presetEntityId?: string } | null>(null)
   const st = structure(s, caseId)
+  const alone = st.people.length <= 1
+  const [open, setOpen] = useState(!summary || alone)
   const behalf = mode === 'operator' ? " on the customer's behalf" : ''
+  const others = st.people.filter((p) => !p.roles.includes('admin')).length
+  const stillToDo = blockedOn(s, caseId).filter((b) => !s.people[b.personId].roles.includes('admin')).length
+
+  if (summary && !open) {
+    return (
+      <div data-testid="structure-summary" className="flex items-center justify-between rounded border border-ink-200 bg-white px-4 py-2 text-sm">
+        <span>
+          {others} {others === 1 ? 'person is' : 'people are'} helping · {stillToDo} still {stillToDo === 1 ? 'has' : 'have'} things to do
+        </span>
+        <Button size="sm" data-testid="structure-toggle" onClick={() => setOpen(true)}>
+          Who's involved
+        </Button>
+      </div>
+    )
+  }
 
   return (
     <Panel
-      title={mode === 'customer' ? 'People and entities' : 'Structure'}
+      title={mode === 'customer' ? 'Who else is helping' : 'Structure'}
       actions={
         <div className="flex gap-2">
+          {summary && !alone && (
+            <Button size="sm" variant="ghost" data-testid="structure-hide" onClick={() => setOpen(false)}>
+              Hide
+            </Button>
+          )}
           <Button size="sm" data-testid="add-person" onClick={() => setForm({ mode: 'person' })}>
             Add a person{behalf}
           </Button>
@@ -35,6 +58,13 @@ export function StructurePanel({ caseId, mode, actorPersonId }: Props) {
       }
     >
       <div className="space-y-4 text-sm">
+        {mode === 'customer' && (
+          <p className="text-ink-600">
+            {alone
+              ? 'Who else owns 25% or more, or signs for the business? Add them and we will ask them directly. You do not need to collect anything from them.'
+              : 'We ask each person directly for what is theirs. You only see your own list.'}
+          </p>
+        )}
         <table className="w-full">
           <thead className="text-left text-xs uppercase tracking-wide text-ink-400">
             <tr>
@@ -55,7 +85,7 @@ export function StructurePanel({ caseId, mode, actorPersonId }: Props) {
                   <td className="py-1 pr-3 text-ink-600">{p.roles.map((r) => ROLE_LABEL[r]).join(', ')}</td>
                   <td className="py-1 pr-3">{p.jurisdiction}</td>
                   <td className="py-1 pr-3">
-                    {primary ? <Chip tone={parcelTone(primary.status)}>{PARCEL_STATUS_LABEL[primary.status]}</Chip> : <span className="text-ink-400">nothing needed</span>}
+                    {primary ? <Chip tone={parcelTone(primary.status)}>{(mode === 'customer' ? CUSTOMER_PARCEL_STATUS_LABEL : PARCEL_STATUS_LABEL)[primary.status]}</Chip> : <span className="text-ink-400">nothing needed</span>}
                   </td>
                   <td className="py-1 tabular-nums" data-testid="structure-progress">
                     {prog ? `${prog.accepted} of ${prog.total}` : ''}
