@@ -31,7 +31,7 @@ export function ItemRow({ item, mode, actorPersonId }: Props) {
   if (mode === 'operator') {
     const reviewable = item.status === 'provided' || item.status === 'in_review'
     return (
-      <li data-testid="item-row" data-status={item.status} data-key={item.requirementKey} className="grid grid-cols-[minmax(0,1fr)_112px_118px_136px] items-start gap-3 border-b border-ink-100 py-2 text-sm last:border-b-0">
+      <li data-testid="item-row" data-status={item.status} data-key={item.requirementKey} className="grid grid-cols-[minmax(0,1fr)_112px_112px_128px] items-start gap-3 border-b border-ink-100 py-2 text-sm last:border-b-0">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-x-2">
             <span className="font-medium">{req.label}</span>

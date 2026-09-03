@@ -26,7 +26,7 @@ export function StructurePanel({ caseId, mode, actorPersonId, summary = false }:
 
   if (summary && !open) {
     return (
-      <div data-testid="structure-summary" className="flex items-center justify-between rounded border border-ink-200 bg-white px-4 py-2 text-sm">
+      <div data-testid="structure-summary" className="flex items-center justify-between rounded-[16px] bg-white px-5 py-2.5 text-sm shadow-card">
         <span>
           {mode === 'customer'
             ? `${others} ${others === 1 ? 'person is' : 'people are'} helping · ${stillToDo} still ${stillToDo === 1 ? 'has' : 'have'} things to do`

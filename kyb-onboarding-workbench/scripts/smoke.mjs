@@ -179,6 +179,23 @@ await check('8 progress: to-do first, done collapsed, count screen reassures', a
   includes(await t('[data-testid=triage-reassurance]'), "We'll ask the other 5 people directly", 'reassurance')
 })
 
+await check('9 phases: customer stepper and operator pipeline', async () => {
+  await reload()
+  await page.click('[data-testid=nav-triage]')
+  eq(await t('[data-testid=phase-panel] [data-testid=step][data-state=current]'), '1\nBusiness details', 'triage phase')
+  await viewAs('per_acme_jordan')
+  await page.waitForSelector('[data-testid=customer-stepper]')
+  includes(await t('[data-testid=customer-stepper] [data-testid=step][data-state=current]'), 'Your documents', 'Jordan phase 2')
+  await page.click('[data-testid=confirm-all-submit]')
+  includes(await t('[data-testid=customer-stepper] [data-testid=step][data-state=current]'), 'Review', 'Jordan phase 3')
+  await viewAs('')
+  const cells = await page.locator('[data-testid=case-status]').allInnerTexts()
+  includes(cells[0], 'In review', 'Northwind phase')
+  includes(cells[0], 'needs more info', 'Northwind flag')
+  await openCase('Northwind Digital Ltd')
+  includes(await t('[data-testid=case-pipeline] [data-testid=step][data-state=current]'), 'In review', 'pipeline stepper')
+})
+
 if (process.env.SMOKE_V2 !== '0') {
   const { v2 } = await import('./smoke-v2.mjs')
   await v2({ page, check, eq, includes, t, count, reload, viewAs, openCase })
