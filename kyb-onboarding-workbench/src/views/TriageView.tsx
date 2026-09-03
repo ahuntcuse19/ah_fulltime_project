@@ -113,10 +113,16 @@ export function TriageView() {
   const draft = useMemo(() => {
     let n = s.seq
     const seq = () => ++n
-    if (form.preset === 'acme') return reidFixture(ACME, seq)
-    if (form.preset === 'northwind') return reidFixture(NORTHWIND, seq)
+    // A preset re-run makes a second case for the same company; number it so
+    // nothing in the demo shows two identical names.
+    const suffixFor = (base: string) => {
+      const existing = Object.values(s.orgs).filter((o) => o.legalName === base || o.legalName.startsWith(`${base} (`)).length
+      return existing === 0 ? '' : ` (${existing + 1})`
+    }
+    if (form.preset === 'acme') return reidFixture(ACME, seq, suffixFor(ACME.org.legalName))
+    if (form.preset === 'northwind') return reidFixture(NORTHWIND, seq, suffixFor(NORTHWIND.org.legalName))
     return draftFromForm(form, seq)
-  }, [form, s.seq])
+  }, [form, s.seq, s.orgs])
 
   const summary = useMemo(() => {
     let n = 0

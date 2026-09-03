@@ -88,8 +88,13 @@ export const NORTHWIND: Fixture = {
 
 const ENTITY_SLUG: Record<string, string> = { ent_nw_us: 'us', ent_nw_sg: 'sg', ent_nw_mx: 'mx', ent_nw_br: 'br' }
 
-/** Re-id a fixture so a triage preset can create a second case alongside the seeded one. */
-export function reidFixture(f: Fixture, seq: () => number): Fixture {
+/**
+ * Re-id a fixture so a triage preset can create a second case alongside the
+ * seeded one. `suffix` (for example " (2)") is appended to the organisation's
+ * name, and to any entity that shares it, so the copy is distinguishable
+ * everywhere: console, case detail, and the demo person switcher.
+ */
+export function reidFixture(f: Fixture, seq: () => number, suffix = ''): Fixture {
   const orgId = `org_${seq()}`
   const entityIds = new Map(f.entities.map((e) => [e.id, `ent_${seq()}`]))
   const personIds = new Map(f.people.map((p) => [p.id, `per_${seq()}`]))
@@ -97,10 +102,16 @@ export function reidFixture(f: Fixture, seq: () => number): Fixture {
     org: {
       ...f.org,
       id: orgId,
+      legalName: f.org.legalName + suffix,
       legalEntityIds: f.org.legalEntityIds.map((id) => entityIds.get(id)!),
       personIds: f.org.personIds.map((id) => personIds.get(id)!),
     },
-    entities: f.entities.map((e) => ({ ...e, id: entityIds.get(e.id)!, organizationId: orgId })),
+    entities: f.entities.map((e) => ({
+      ...e,
+      id: entityIds.get(e.id)!,
+      organizationId: orgId,
+      legalName: e.legalName === f.org.legalName ? e.legalName + suffix : e.legalName,
+    })),
     people: f.people.map((p) => ({ ...p, id: personIds.get(p.id)!, organizationId: orgId })),
     answers: f.answers,
   }
