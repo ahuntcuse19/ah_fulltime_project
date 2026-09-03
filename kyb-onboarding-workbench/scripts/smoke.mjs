@@ -173,6 +173,7 @@ await check('8 progress: to-do first, done collapsed, count screen reassures', a
   eq(await count('[data-testid=bucket-done] [data-testid=item-row]'), 0, 'done collapsed')
   await page.click('[data-testid=done-toggle]')
   eq(await count('[data-testid=bucket-done] [data-testid=item-row]'), 10, 'done expanded')
+  await viewAs('')
   await page.click('[data-testid=nav-triage]')
   await page.click('[data-testid=preset-northwind]')
   await page.click('[data-testid=triage-continue]')

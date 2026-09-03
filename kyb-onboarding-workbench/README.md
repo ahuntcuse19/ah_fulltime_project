@@ -10,7 +10,7 @@ The bottleneck is people rather than documents: a linear form asks one responden
 
 ## What is fake
 
-Everything. No backend, no auth, no verification, no compliance logic. A file input records a filename. One reducer holds state; refresh resets it. Emails are event-log lines. The requirement catalog contains only what Stable Sea described; requirements tagged "assumed" in the operator view are the ones most likely to be wrong. The skin mirrors Stable Sea Terminal by request; no logo or artwork is reproduced.
+Everything. No backend, no auth, no verification, no compliance logic. A file input records a filename. One reducer holds state; refresh resets it. Emails are event-log lines. The requirement catalog contains only what Stable Sea described; requirements tagged "assumed" in the operator view are the ones most likely to be wrong. Type and colour follow Stable Sea Terminal by request; no name, logo, shell or artwork is reproduced.
 
 ## What I would want to know
 

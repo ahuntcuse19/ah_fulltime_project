@@ -206,8 +206,8 @@ export function TriageView() {
         </span>
       }
     >
-      <h2 className="text-2xl font-semibold text-olive-900">Join Stable Sea Terminal</h2>
-      <p className="mt-1 mb-6 text-sm text-ink-600">Tell us about the business. We'll work out what's needed and ask each person directly.</p>
+      <h2 className="text-2xl font-semibold text-olive-900">Tell us about your business</h2>
+      <p className="mt-1 mb-6 text-sm text-ink-600">Four questions. We'll work out what's needed and ask each person directly.</p>
       <div className="space-y-5">
         <Field label="Organisation legal name">
           <input className={inputClass} value={form.orgName} onChange={(e) => edit({ orgName: e.target.value })} />
