@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { ItemRow } from '../components/ItemRow'
 import { ReRequestModal } from '../components/ReRequestModal'
+import { StructurePanel } from '../components/StructurePanel'
 import { Button, Chip, Muted, Panel, caseTone, parcelTone } from '../components/ui'
 import { CASE_STATUS_LABEL, PARCEL_STATUS_LABEL, PARTY_LABEL, ROLE_LABEL, TIER_LABEL } from '../model/catalog'
 import { caseItems, caseParcels, daysOpen, outstanding, parcelProgress, relativeTime, sortByCatalog, timeline } from '../model/selectors'
@@ -70,6 +71,8 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
           )}
         </div>
       </div>
+
+      <StructurePanel caseId={caseId} mode="operator" actorPersonId="operator" />
 
       <div className="grid grid-cols-[1fr_2fr_1fr] gap-6">
         <div className="space-y-4">

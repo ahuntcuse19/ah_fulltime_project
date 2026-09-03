@@ -9,7 +9,7 @@ export const NOW = '2026-09-03T09:00:00Z'
 const DAY = 86_400_000
 
 /** v2 seeds a document holder on Northwind. v1 builds without her. */
-export const SEED_WITH_DELEGATE = false
+export const SEED_WITH_DELEGATE = true
 
 export const EMPTY_STATE: AppState = {
   orgs: {},

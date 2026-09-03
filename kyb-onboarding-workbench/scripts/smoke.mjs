@@ -87,7 +87,7 @@ await check('2 Singapore UBO sees only her items', async () => {
   includes(await page.locator('[data-testid=reviewer-note]').allInnerTexts().then((a) => a.join(' ')), 'paper original from 2004', 'stuck note')
 })
 
-const SEEDED_ACCEPTED = Number(process.env.SEED_ACCEPTED ?? 42)
+const SEEDED_ACCEPTED = Number(process.env.SEED_ACCEPTED ?? 37)
 await check('3 re-request: new parcel, non-admin, accepted untouched, timeline origin', async () => {
   await reload()
   await openCase('Northwind Digital Ltd')
@@ -151,7 +151,7 @@ await check('6 reload resets to seed', async () => {
   eq((await page.locator('[data-testid=case-status]').allInnerTexts())[1], 'Collecting', 'Acme status')
 })
 
-if (process.env.SMOKE_V2 === '1') {
+if (process.env.SMOKE_V2 !== '0') {
   const { v2 } = await import('./smoke-v2.mjs')
   await v2({ page, check, eq, includes, t, count, reload, viewAs, openCase })
 }

@@ -1,4 +1,5 @@
 import { ItemRow } from '../components/ItemRow'
+import { StructurePanel } from '../components/StructurePanel'
 import { Button, Chip, Muted, parcelTone } from '../components/ui'
 import { PARCEL_STATUS_LABEL, PARTY_PHRASE } from '../model/catalog'
 import { estimateMinutes, parcelItems, personParcels, sortByCatalog, subjectName } from '../model/selectors'
@@ -18,6 +19,7 @@ export function ParcelView({ personId, caseId }: { personId: string; caseId: str
       <div className="rounded bg-ink-100 px-3 py-1 text-xs text-ink-600">
         Viewing as {person.name} · {org.legalName}
       </div>
+      {person.roles.includes('admin') && <StructurePanel caseId={caseId} mode="customer" actorPersonId={personId} />}
       {parcels.length === 0 && <p className="text-sm">Nothing is needed from you right now.</p>}
       {parcels.map((p) => (
         <ParcelSection key={p.id} parcel={p} personId={personId} orgName={org.legalName} />

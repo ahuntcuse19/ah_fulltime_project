@@ -1,0 +1,79 @@
+// v2 checks: collaborators, delegation, entities. Imported by smoke.mjs.
+export async function v2({ page, check, eq, includes, t, count, reload, viewAs, openCase }) {
+  // The fresh Northwind case created below is the third case row and the
+  // second "Northwind Digital Ltd" group in the person switcher.
+  const newPersonId = (name) =>
+    page
+      .locator('[data-testid=person-switcher] optgroup[label="Northwind Digital Ltd"]')
+      .nth(1)
+      .locator('option')
+      .filter({ hasText: name })
+      .first()
+      .getAttribute('value')
+
+  await check('v2-1 adding a UBO creates a separate request', async () => {
+    await reload()
+    await page.click('[data-testid=nav-triage]')
+    await page.click('[data-testid=preset-northwind]')
+    await page.click('[data-testid=triage-continue]')
+    await page.click('[data-testid=triage-create]')
+    await viewAs(await newPersonId('Dana Whitfield'))
+    await page.waitForSelector('[data-testid=parcel-primary]')
+    const peopleBefore = await count('[data-testid=structure-person]')
+    eq(peopleBefore, 6, 'people before')
+    eq(await count('[data-testid=parcel-primary] [data-testid=item-row]'), 32, 'admin rows before')
+    await page.click('[data-testid=add-person]')
+    await page.fill('[data-testid=cf-name]', 'Mei Tan')
+    await page.fill('[data-testid=cf-email]', 'mei@test.example')
+    await page.check('[data-testid=cf-role-ubo]')
+    await page.selectOption('[data-testid=cf-jurisdiction]', 'SG')
+    await page.fill('[data-testid=cf-ownership]', '10')
+    includes(await t('[data-testid=cf-preview]'), 'Creates 4 items in a new request sent to Mei Tan', 'preview')
+    await page.click('[data-testid=cf-submit]')
+    eq(await count('[data-testid=parcel-primary] [data-testid=item-row]'), 32, 'admin rows unchanged')
+    eq(await count('[data-testid=structure-person]'), peopleBefore + 1, 'people table')
+    includes(await page.locator('[data-testid=structure-person]').last().innerText(), 'Sent', 'new request sent')
+  })
+
+  await check('v2-2 delegation moves only movable items', async () => {
+    await page.click('[data-testid=add-person]')
+    await page.fill('[data-testid=cf-name]', 'Ana Souza')
+    await page.fill('[data-testid=cf-email]', 'ana@test.example')
+    await page.check('[data-testid=cf-role-advisor]')
+    await page.selectOption('[data-testid=cf-jurisdiction]', 'BR')
+    await page.getByLabel('Northwind Digital Brasil Ltda.').check()
+    includes(await t('[data-testid=cf-preview]'), 'Moves 5 items out of Dana Whitfield\'s list', 'preview')
+    await page.click('[data-testid=cf-submit]')
+    eq(await count('[data-testid=parcel-primary] [data-testid=item-row]'), 27, 'admin rows after delegation')
+    includes(await page.locator('[data-testid=structure-person]').last().innerText(), '0 of 5', "Ana's request")
+    const holders = await page.locator('[data-testid=structure-holder]').allInnerTexts()
+    eq(holders[3], 'Ana Souza', 'BR entity holder')
+  })
+
+  await check('v2-3 operator adds an entity on the customer\'s behalf', async () => {
+    await viewAs('')
+    await page.locator('[data-testid=case-row]').nth(2).getByRole('button', { name: 'Northwind Digital Ltd', exact: true }).click()
+    await page.waitForSelector('[data-testid=parcel-card]')
+    await page.click('[data-testid=add-entity]')
+    await page.fill('[data-testid=cf-legal-name]', 'Northwind Digital UK Ltd')
+    await page.selectOption('[data-testid=cf-jurisdiction]', 'GB')
+    includes(await t('[data-testid=cf-preview]'), 'Adds 5 items to Dana Whitfield\'s request', 'preview')
+    await page.click('[data-testid=cf-submit]')
+    eq(await count('[data-testid=structure-entity]'), 5, 'entity rows')
+    eq(await t('[data-testid=case-tier]'), 'Complex', 'tier unchanged')
+    const entries = await page.locator('[data-testid=timeline-entry]').allInnerTexts()
+    includes(entries.slice(0, 3).join(' '), 'Added Northwind Digital UK Ltd (GB): 5 items assigned to Dana Whitfield', 'timeline')
+    includes(entries.join(' '), 'Delegated 5 items for Northwind Digital Brasil Ltda. to Ana Souza', 'delegation logged')
+  })
+
+  await check('v2-4 seeded delegate holds the MX entity', async () => {
+    await reload()
+    includes((await page.locator('[data-testid=blocked-on]').allInnerTexts())[0], 'Lucía Herrera', 'console blocked-on')
+    await openCase('Northwind Digital Ltd')
+    const holders = await page.locator('[data-testid=structure-holder]').allInnerTexts()
+    eq(holders[2], 'Lucía Herrera', 'MX holder')
+    const cards = await page.locator('[data-testid=parcel-card]').allInnerTexts()
+    const lucia = cards.find((c) => c.includes('Lucía Herrera'))
+    includes(lucia ?? '', '0 of 5 accepted', "Lucía's parcel")
+  })
+}
