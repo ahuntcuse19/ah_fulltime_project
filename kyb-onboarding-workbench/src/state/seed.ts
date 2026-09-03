@@ -122,7 +122,7 @@ export function buildSeed(): AppState {
   }
   const day = (daysAgo: number) => {
     step += 1
-    run({ type: 'sys/setNow', now: new Date(Date.parse(NOW) - daysAgo * DAY + step * 60_000).toISOString() })
+    run({ type: 'sys/setNow', now: new Date(Date.parse(NOW) - daysAgo * DAY - 60 * 60_000 + step * 60_000).toISOString() })
   }
   const provide = (caseId: string, actor: string, key: RequirementKey, subjectId: string, value: string) =>
     run({ type: 'item/provide', itemId: findItem(s, caseId, key, subjectId).id, value, actorPersonId: actor })
