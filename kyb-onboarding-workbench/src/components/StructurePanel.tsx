@@ -58,7 +58,7 @@ export function StructurePanel({ caseId, mode, actorPersonId, summary = false }:
         </div>
       }
     >
-      <div className="space-y-4 text-sm">
+      <div className="space-y-4 overflow-x-auto text-sm">
         {mode === 'operator' && <p className="text-xs text-ink-400">Anything added here is added on the customer's behalf and logged as the operator.</p>}
         {mode === 'customer' && (
           <p className="text-ink-600">
@@ -67,7 +67,7 @@ export function StructurePanel({ caseId, mode, actorPersonId, summary = false }:
               : 'We ask each person directly for what is theirs. You only see your own list.'}
           </p>
         )}
-        <table className="w-full">
+        <table className="w-full min-w-[520px]">
           <thead className="text-left text-xs uppercase tracking-wide text-ink-400">
             <tr>
               <th className="py-1 pr-3">Name</th>
@@ -97,7 +97,7 @@ export function StructurePanel({ caseId, mode, actorPersonId, summary = false }:
             })}
           </tbody>
         </table>
-        <table className="w-full">
+        <table className="w-full min-w-[520px]">
           <thead className="text-left text-xs uppercase tracking-wide text-ink-400">
             <tr>
               <th className="py-1 pr-3">Entity</th>

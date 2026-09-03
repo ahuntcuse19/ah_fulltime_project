@@ -221,7 +221,7 @@ export function TriageView() {
         <Field label="EIN (optional)" hint="Prefill works for EINs the fake registry knows; the real one would be a lookup.">
           <input className={inputClass} value={form.ein} onChange={(e) => edit({ ein: e.target.value })} />
         </Field>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <Field label="Admin name">
             <input className={inputClass} value={form.adminName} onChange={(e) => edit({ adminName: e.target.value })} />
           </Field>
@@ -273,14 +273,19 @@ function TwoPanel({ children, phase, note, presets }: { children: React.ReactNod
   return (
     <div>
       {presets && <div className="mb-3 flex justify-end">{presets}</div>}
-      <div className={`grid grid-cols-[minmax(0,1fr)_340px] overflow-hidden ${cardClass} rounded-[24px]`}>
-        <div className="p-10">{children}</div>
-        <aside className="flex flex-col justify-between bg-paper-dim p-8" data-testid="phase-panel">
+      <div className={`grid grid-cols-1 overflow-hidden ${cardClass} rounded-[24px] md:grid-cols-[minmax(0,1fr)_340px]`}>
+        <div className="order-2 p-5 md:order-1 md:p-10">{children}</div>
+        <aside className="order-1 flex flex-col justify-between bg-paper-dim p-5 md:order-2 md:p-8" data-testid="phase-panel">
           <div>
-            <div className="mb-6 text-xs font-medium uppercase tracking-wide text-ink-400">Your onboarding</div>
-            <Stepper steps={CUSTOMER_PHASES} current={phase} orientation="vertical" />
+            <div className="mb-3 text-xs font-medium uppercase tracking-wide text-ink-400 md:mb-6">Your onboarding</div>
+            <div className="hidden md:block">
+              <Stepper steps={CUSTOMER_PHASES} current={phase} orientation="vertical" />
+            </div>
+            <div className="md:hidden">
+              <Stepper steps={CUSTOMER_PHASES} current={phase} />
+            </div>
           </div>
-          <p className="text-xs text-ink-600">{note}</p>
+          <p className="mt-3 text-xs text-ink-600 md:mt-0">{note}</p>
         </aside>
       </div>
     </div>

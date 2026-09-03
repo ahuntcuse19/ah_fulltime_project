@@ -83,14 +83,14 @@ export function CaseDetailView({ caseId }: { caseId: string }) {
         }
       />
 
-      <div className="mb-4 flex items-center justify-between gap-6 rounded-[16px] bg-white px-5 py-3 shadow-card">
+      <div className="mb-4 rounded-[16px] bg-white px-4 py-3 shadow-card md:px-5">
         <Stepper steps={CASE_PHASES} {...casePhase(c)} testId="case-pipeline" />
       </div>
       <div className="mb-4">
         <StructurePanel caseId={caseId} mode="operator" actorPersonId="operator" summary />
       </div>
 
-      <div className="grid grid-cols-[236px_minmax(0,1fr)_256px] gap-5">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-[236px_minmax(0,1fr)_256px]">
         <div className="space-y-4">
           <Panel title="Parcels" dense>
             <ul className="divide-y divide-ink-100">

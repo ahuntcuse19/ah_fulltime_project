@@ -23,7 +23,7 @@ export function ParcelView({ personId, caseId }: { personId: string; caseId: str
       <DemoBox className="px-3 py-1.5">
         Demo · this is what <strong>{person.name}</strong> sees when they open their link for {org.legalName}.
       </DemoBox>
-      <div className={`${cardClass} px-6 py-4`}>
+      <div className={`${cardClass} px-4 py-3 md:px-6 md:py-4`}>
         <Stepper steps={CUSTOMER_PHASES} current={customerPhase(s, personId, caseId)} testId="customer-stepper" />
       </div>
       {isAdmin && !solo && <AdminStrip caseId={caseId} personId={personId} />}
@@ -57,7 +57,7 @@ function AdminStrip({ caseId, personId }: { caseId: string; personId: string }) 
         : 'Nobody. Everything is in and being checked.'
 
   return (
-    <section data-testid="admin-strip" className={`${cardClass} p-6`}>
+    <section data-testid="admin-strip" className={`${cardClass} p-4 md:p-6`}>
       <div className="flex items-baseline justify-between">
         <span className="text-lg font-semibold text-olive-900">{org.legalName}</span>
         <span className="font-mono text-sm tabular-nums">
@@ -165,7 +165,7 @@ function ParcelSection({ parcel, personId, orgName, othersNeedWork }: { parcel: 
   }
 
   return (
-    <section data-testid={parcel.isReRequest ? 'parcel-rerequest' : 'parcel-primary'} className={`${cardClass} p-7`}>
+    <section data-testid={parcel.isReRequest ? 'parcel-rerequest' : 'parcel-primary'} className={`${cardClass} p-4 md:p-7`}>
       {parcel.isReRequest && parcel.raisedBy && (
         <div className="mb-3">
           <h2 className="text-xl font-semibold text-olive-900" data-testid="rr-title">

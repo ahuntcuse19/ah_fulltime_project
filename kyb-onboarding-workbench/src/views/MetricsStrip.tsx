@@ -30,7 +30,7 @@ export function MetricsStrip() {
   const doneAll = m.completionByTier.reduce((a, t) => a + t.done, 0)
   const totalAll = m.completionByTier.reduce((a, t) => a + t.total, 0)
   return (
-    <div className="grid grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:gap-4 lg:grid-cols-4">
       <Tile
         testId="metric-median"
         label="Median days to first transaction"

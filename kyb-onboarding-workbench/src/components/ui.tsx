@@ -88,14 +88,14 @@ export function Card({ children, className = '', testId }: { children: ReactNode
 
 export function PageHeader({ eyebrow, title, description, meta, actions }: { eyebrow?: ReactNode; title: ReactNode; description?: ReactNode; meta?: ReactNode; actions?: ReactNode }) {
   return (
-    <div className="mb-6 flex items-start justify-between gap-6">
+    <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-start md:justify-between md:gap-6">
       <div className="min-w-0">
         {eyebrow && <div className="mb-1 text-xs text-ink-400">{eyebrow}</div>}
         <h1 className="text-2xl font-semibold leading-tight text-olive-900">{title}</h1>
         {description && <p className="mt-1 max-w-2xl text-sm text-ink-600">{description}</p>}
         {meta && <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-ink-600">{meta}</div>}
       </div>
-      {actions && <div className="flex shrink-0 items-center gap-2">{actions}</div>}
+      {actions && <div className="flex shrink-0 flex-wrap items-center gap-2">{actions}</div>}
     </div>
   )
 }
@@ -114,7 +114,7 @@ export function Panel({ title, children, actions, className = '', dense = false 
 
 export function Modal({ title, onClose, children, width = 'max-w-2xl' }: { title: string; onClose: () => void; children: ReactNode; width?: string }) {
   return (
-    <div className="fixed inset-0 z-20 flex items-start justify-center overflow-y-auto bg-ink-900/40 p-8" onClick={onClose}>
+    <div className="fixed inset-0 z-20 flex items-start justify-center overflow-y-auto bg-ink-900/40 p-3 md:p-8" onClick={onClose}>
       <div role="dialog" aria-label={title} className={`w-full ${width} ${cardClass}`} onClick={(e) => e.stopPropagation()}>
         <header className="flex h-14 items-center justify-between px-6">
           <h2 className="text-base font-semibold">{title}</h2>
@@ -202,7 +202,7 @@ export function Stepper({
     )
   }
   return (
-    <ol data-testid={testId} className="flex items-center">
+    <ol data-testid={testId} className="flex items-center overflow-x-auto">
       {steps.map((label, i) => {
         const st = state(i)
         return (

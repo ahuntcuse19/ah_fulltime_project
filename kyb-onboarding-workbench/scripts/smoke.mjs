@@ -197,6 +197,32 @@ await check('9 phases: customer stepper and operator pipeline', async () => {
   includes(await t('[data-testid=case-pipeline] [data-testid=step][data-state=current]'), 'In review', 'pipeline stepper')
 })
 
+await check('10 mobile: no horizontal overflow at 390px', async () => {
+  await page.setViewportSize({ width: 390, height: 844 })
+  const overflow = async (label) => {
+    const { sw, iw } = await page.evaluate(() => ({ sw: document.documentElement.scrollWidth, iw: window.innerWidth }))
+    if (sw > iw) throw new Error(`${label}: scrollWidth ${sw} > viewport ${iw}`)
+  }
+  await reload()
+  await overflow('console')
+  await openCase('Northwind Digital Ltd')
+  await overflow('case detail')
+  await page.click('[data-testid=structure-toggle]')
+  await overflow('case detail with structure open')
+  await viewAs('per_nw_admin')
+  await page.waitForSelector('[data-testid=admin-strip]')
+  await overflow('admin parcel')
+  await viewAs('per_nw_ubo_sg')
+  await overflow('UBO parcel')
+  await viewAs('')
+  await page.click('[data-testid=nav-triage]')
+  await overflow('triage')
+  await page.click('[data-testid=preset-northwind]')
+  await page.click('[data-testid=triage-continue]')
+  await overflow('triage summary')
+  await page.setViewportSize({ width: 1400, height: 1000 })
+})
+
 if (process.env.SMOKE_V2 !== '0') {
   const { v2 } = await import('./smoke-v2.mjs')
   await v2({ page, check, eq, includes, t, count, reload, viewAs, openCase })

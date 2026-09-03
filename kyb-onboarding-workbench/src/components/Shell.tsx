@@ -53,7 +53,7 @@ export function AppShell({ children, mode, wide = false }: { children: ReactNode
   return (
     <div className="min-h-screen">
       <header className="border-b border-ink-200 bg-white">
-        <div className="mx-auto flex max-w-[1180px] items-center gap-8 px-8">
+        <div className="mx-auto flex max-w-[1180px] flex-wrap items-center gap-x-8 gap-y-0 px-4 md:px-8">
           <span className="py-4 text-sm font-semibold">Onboarding Workbench</span>
           {mode === 'operator' && (
             <nav className="flex gap-5">
@@ -65,12 +65,12 @@ export function AppShell({ children, mode, wide = false }: { children: ReactNode
               </Tab>
             </nav>
           )}
-          <div className="ml-auto py-3">
+          <div className="ml-auto py-2 md:py-3">
             <DemoCluster />
           </div>
         </div>
       </header>
-      <main className={`mx-auto px-8 pb-16 pt-8 ${wide ? 'max-w-[860px]' : 'max-w-[1180px]'}`}>{children}</main>
+      <main className={`mx-auto px-4 pb-16 pt-5 md:px-8 md:pt-8 ${wide ? 'max-w-[860px]' : 'max-w-[1180px]'}`}>{children}</main>
     </div>
   )
 }
