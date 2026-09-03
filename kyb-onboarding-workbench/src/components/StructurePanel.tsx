@@ -21,7 +21,6 @@ export function StructurePanel({ caseId, mode, actorPersonId, summary = false }:
   const st = structure(s, caseId)
   const alone = st.people.length <= 1
   const [open, setOpen] = useState(!summary || alone)
-  const behalf = mode === 'operator' ? " on the customer's behalf" : ''
   const others = st.people.filter((p) => !p.roles.includes('admin')).length
   const stillToDo = blockedOn(s, caseId).filter((b) => !s.people[b.personId].roles.includes('admin')).length
 
@@ -29,10 +28,12 @@ export function StructurePanel({ caseId, mode, actorPersonId, summary = false }:
     return (
       <div data-testid="structure-summary" className="flex items-center justify-between rounded border border-ink-200 bg-white px-4 py-2 text-sm">
         <span>
-          {others} {others === 1 ? 'person is' : 'people are'} helping · {stillToDo} still {stillToDo === 1 ? 'has' : 'have'} things to do
+          {mode === 'customer'
+            ? `${others} ${others === 1 ? 'person is' : 'people are'} helping · ${stillToDo} still ${stillToDo === 1 ? 'has' : 'have'} things to do`
+            : `${st.people.length} people · ${st.entities.length} ${st.entities.length === 1 ? 'entity' : 'entities'} · ${st.entities.filter((e) => !e.holder.roles.includes('admin')).length} delegated`}
         </span>
-        <Button size="sm" data-testid="structure-toggle" onClick={() => setOpen(true)}>
-          Who's involved
+        <Button size="sm" variant="ghost" data-testid="structure-toggle" onClick={() => setOpen(true)}>
+          {mode === 'customer' ? "Who's involved" : 'Structure'}
         </Button>
       </div>
     )
@@ -49,15 +50,16 @@ export function StructurePanel({ caseId, mode, actorPersonId, summary = false }:
             </Button>
           )}
           <Button size="sm" data-testid="add-person" onClick={() => setForm({ mode: 'person' })}>
-            Add a person{behalf}
+            Add person
           </Button>
           <Button size="sm" data-testid="add-entity" onClick={() => setForm({ mode: 'entity' })}>
-            Add an entity{behalf}
+            Add entity
           </Button>
         </div>
       }
     >
       <div className="space-y-4 text-sm">
+        {mode === 'operator' && <p className="text-xs text-ink-400">Anything added here is added on the customer's behalf and logged as the operator.</p>}
         {mode === 'customer' && (
           <p className="text-ink-600">
             {alone
@@ -113,7 +115,7 @@ export function StructurePanel({ caseId, mode, actorPersonId, summary = false }:
                   {e.holder.name}
                 </td>
                 <td className="py-1 text-right">
-                  <Button size="sm" onClick={() => setForm({ mode: 'person', presetEntityId: e.entityId })}>
+                  <Button size="sm" variant="ghost" onClick={() => setForm({ mode: 'person', presetEntityId: e.entityId })}>
                     Delegate
                   </Button>
                 </td>

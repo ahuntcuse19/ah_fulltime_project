@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Button, Field, Modal, Select, inputClass } from './ui'
-import { DOWNSTREAM_PARTIES, PARTY_LABEL, REQUIREMENTS, REQ_BY_KEY } from '../model/catalog'
+import { DOWNSTREAM_PARTIES, PARTY_LABEL, PARTY_PHRASE, REQUIREMENTS, REQ_BY_KEY } from '../model/catalog'
 import { adminOf } from '../model/rules'
 import { caseItems, caseParcels, subjectName } from '../model/selectors'
 import type { DownstreamParty, RequirementKey, SubjectKind } from '../model/types'
@@ -162,6 +162,12 @@ export function ReRequestModal({ caseId, onClose }: { caseId: string; onClose: (
             ))}
           </Select>
         </Field>
+        <div className="rounded border border-ink-200 bg-ink-100 px-3 py-2 text-sm" data-testid="rr-preview">
+          <div className="mb-1 text-xs font-medium uppercase tracking-wide text-ink-400">What this does</div>
+          {moveIds.length + rows.length === 0
+            ? <span className="text-ink-400">Pick at least one item.</span>
+            : `Sends ${moveIds.length + rows.length} item${moveIds.length + rows.length === 1 ? '' : 's'} to ${s.people[recipient]?.name ?? 'the recipient'} as "One more thing from our ${PARTY_PHRASE[party]}". Nothing already accepted is touched.`}
+        </div>
         <div className="flex justify-end gap-2">
           <Button onClick={onClose}>Cancel</Button>
           <Button

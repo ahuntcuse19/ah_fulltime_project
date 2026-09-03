@@ -2,20 +2,11 @@
 import { useState } from 'react'
 import { ItemRow } from '../components/ItemRow'
 import { StructurePanel } from '../components/StructurePanel'
-import { Button, Muted } from '../components/ui'
+import { Button, DemoBox, Muted, ProgressBar } from '../components/ui'
 import { PARTY_PHRASE, SENSITIVE_LINE } from '../model/catalog'
 import { estimateMinutes, parcelBuckets, parcelDone, personCaseSummary, personParcels, sortByCatalog, subjectName, type Bucket } from '../model/selectors'
 import type { Item, Parcel } from '../model/types'
 import { useDispatch, useStore } from '../state/Store'
-
-function Bar({ done, total }: { done: number; total: number }) {
-  const pct = total ? Math.round((done / total) * 100) : 0
-  return (
-    <div className="h-1.5 w-full rounded bg-ink-200" data-testid="progress-bar" data-pct={pct}>
-      <div className="h-1.5 rounded bg-ok-600" style={{ width: `${pct}%` }} />
-    </div>
-  )
-}
 
 export function ParcelView({ personId, caseId }: { personId: string; caseId: string }) {
   const s = useStore()
@@ -25,13 +16,14 @@ export function ParcelView({ personId, caseId }: { personId: string; caseId: str
   const org = s.orgs[c.organizationId]
   const parcels = personParcels(s, personId, caseId)
   const isAdmin = person.roles.includes('admin')
+  const solo = org.personIds.length <= 1
 
   return (
-    <div className="mx-auto max-w-3xl space-y-6">
-      <div className="rounded bg-ink-100 px-3 py-1 text-xs text-ink-600">
-        Viewing as {person.name} · {org.legalName}
-      </div>
-      {isAdmin && <AdminStrip caseId={caseId} personId={personId} />}
+    <div className="mx-auto max-w-3xl space-y-5">
+      <DemoBox className="px-3 py-1.5">
+        Demo · this is what <strong>{person.name}</strong> sees when they open their link for {org.legalName}.
+      </DemoBox>
+      {isAdmin && !solo && <AdminStrip caseId={caseId} personId={personId} />}
       {isAdmin && <StructurePanel key={`${caseId}:${personId}`} caseId={caseId} mode="customer" actorPersonId={personId} summary />}
       {parcels.length === 0 && <p className="text-sm">Nothing is needed from you right now.</p>}
       {parcels.map((p) => (
@@ -62,15 +54,15 @@ function AdminStrip({ caseId, personId }: { caseId: string; personId: string }) 
         : 'Nobody. Everything is in and being checked.'
 
   return (
-    <section data-testid="admin-strip" className="rounded border border-ink-200 bg-white p-4">
+    <section data-testid="admin-strip" className="rounded border border-ink-200 bg-white p-5">
       <div className="flex items-baseline justify-between">
-        <span className="text-base font-semibold">{org.legalName}</span>
+        <span className="text-lg font-semibold">{org.legalName}</span>
         <span className="text-sm tabular-nums">
           {sum.done} of {sum.total} done
         </span>
       </div>
       <div className="mt-2">
-        <Bar done={sum.done} total={sum.total} />
+        <ProgressBar done={sum.done} total={sum.total} testId="progress-bar" />
       </div>
       <div className="mt-3 text-sm">
         <span className="font-medium">Waiting on:</span>{' '}
@@ -129,9 +121,9 @@ function ParcelSection({ parcel, personId, orgName, othersNeedWork }: { parcel: 
     const collapsed = bucket === 'done' && !showDone
     return (
       <div key={bucket} data-testid={`bucket-${bucket}`}>
-        <div className="mb-1 flex items-center gap-3">
-          <h3 className="text-sm font-semibold">
-            {BUCKET_TITLE[bucket]} <Muted>({its.length})</Muted>
+        <div className="mb-2 flex items-center gap-3">
+          <h3 className="text-base font-semibold">
+            {BUCKET_TITLE[bucket]} <span className="text-sm font-normal text-ink-400">{its.length}</span>
           </h3>
           {bucket === 'done' && (
             <Button variant="ghost" size="sm" data-testid="done-toggle" onClick={() => setShowDone((v) => !v)}>
@@ -170,7 +162,7 @@ function ParcelSection({ parcel, personId, orgName, othersNeedWork }: { parcel: 
   }
 
   return (
-    <section data-testid={parcel.isReRequest ? 'parcel-rerequest' : 'parcel-primary'} className="rounded border border-ink-200 bg-white p-5">
+    <section data-testid={parcel.isReRequest ? 'parcel-rerequest' : 'parcel-primary'} className="rounded border border-ink-200 bg-white p-6">
       {parcel.isReRequest && parcel.raisedBy && (
         <div className="mb-3">
           <h2 className="text-lg font-semibold" data-testid="rr-title">
@@ -180,7 +172,7 @@ function ParcelSection({ parcel, personId, orgName, othersNeedWork }: { parcel: 
         </div>
       )}
       <div className="mb-4">
-        <p className="text-base font-medium" data-testid="parcel-header">
+        <p className="text-lg font-semibold" data-testid="parcel-header">
           {allDone
             ? othersNeedWork
               ? "Your original request is done. There's one more thing below."
@@ -195,7 +187,7 @@ function ParcelSection({ parcel, personId, orgName, othersNeedWork }: { parcel: 
           </Muted>
         )}
         <div className="mt-2">
-          <Bar done={done} total={total} />
+          <ProgressBar done={done} total={total} testId="progress-bar" />
         </div>
       </div>
       {todo === 0 && buckets.checking.length === 0 && buckets.done.length === 0 && <p className="text-sm text-ink-400">Nothing here yet.</p>}

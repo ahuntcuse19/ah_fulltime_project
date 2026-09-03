@@ -2,8 +2,21 @@ import { CaseDetailView } from './views/CaseDetailView'
 import { ConsoleView } from './views/ConsoleView'
 import { ParcelView } from './views/ParcelView'
 import { TriageView } from './views/TriageView'
-import { Button, Select } from './components/ui'
+import { Button, DemoBox, Select } from './components/ui'
 import { useDispatch, useStore } from './state/Store'
+
+function Tab({ active, testId, onClick, children }: { active: boolean; testId: string; onClick: () => void; children: string }) {
+  return (
+    <button
+      type="button"
+      data-testid={testId}
+      onClick={onClick}
+      className={`-mb-px border-b-2 px-1 pb-3 pt-3 text-sm ${active ? 'border-accent-600 font-medium text-ink-900' : 'border-transparent text-ink-600 hover:text-ink-900'}`}
+    >
+      {children}
+    </button>
+  )
+}
 
 export default function App() {
   const s = useStore()
@@ -14,25 +27,23 @@ export default function App() {
   return (
     <div className="min-h-screen">
       <header className="border-b border-ink-200 bg-white">
-        <div className="mx-auto flex max-w-[1280px] items-center gap-6 px-6 py-3">
-          <div className="flex items-baseline gap-2">
-            <span className="text-sm font-semibold">KYB Onboarding Workbench</span>
-            <span className="text-xs text-ink-400">prototype, seeded data</span>
-          </div>
-          <nav className="flex gap-1">
-            <Button data-testid="nav-console" variant={view.kind === 'console' ? 'primary' : 'ghost'} size="sm" onClick={() => dispatch({ type: 'demo/switchPerson', personId: null })}>
-              Console
-            </Button>
-            <Button data-testid="nav-triage" variant={view.kind === 'triage' ? 'primary' : 'ghost'} size="sm" onClick={() => dispatch({ type: 'nav', view: { kind: 'triage' } })}>
-              Triage
-            </Button>
+        <div className="mx-auto flex max-w-[1280px] items-center gap-8 px-6">
+          <span className="py-3 text-sm font-semibold">KYB Onboarding Workbench</span>
+          <nav className="flex gap-5">
+            <Tab active={view.kind === 'console' || view.kind === 'case'} testId="nav-console" onClick={() => dispatch({ type: 'demo/switchPerson', personId: null })}>
+              Cases
+            </Tab>
+            <Tab active={view.kind === 'triage'} testId="nav-triage" onClick={() => dispatch({ type: 'nav', view: { kind: 'triage' } })}>
+              New case
+            </Tab>
           </nav>
-          <div className="ml-auto flex items-center gap-3">
-            <label className="flex items-center gap-2 text-xs text-ink-600">
-              <span className="rounded bg-warn-100 px-1.5 py-0.5 font-medium text-warn-600">Demo only</span>
+          <DemoBox className="ml-auto flex items-center gap-2 px-2 py-1">
+            <span className="font-medium text-warn-600">Demo</span>
+            <label className="flex items-center gap-1">
               view as
               <Select
                 data-testid="person-switcher"
+                className="h-7"
                 value={s.activePersonId ?? ''}
                 onChange={(e) => dispatch({ type: 'demo/switchPerson', personId: e.target.value || null })}
               >
@@ -48,13 +59,13 @@ export default function App() {
                 ))}
               </Select>
             </label>
-            <Button size="sm" onClick={() => dispatch({ type: 'reset' })}>
-              Reset to seed
+            <Button size="sm" variant="ghost" onClick={() => dispatch({ type: 'reset' })}>
+              Reset
             </Button>
-          </div>
+          </DemoBox>
         </div>
       </header>
-      <main className="mx-auto max-w-[1280px] px-6 py-6">
+      <main className="mx-auto max-w-[1280px] px-6 py-8">
         {view.kind === 'console' && <ConsoleView />}
         {view.kind === 'triage' && <TriageView />}
         {view.kind === 'case' && <CaseDetailView caseId={view.caseId} />}

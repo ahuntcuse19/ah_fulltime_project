@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { Button, Field, inputClass } from '../components/ui'
+import { Button, DemoBox, Field, PageHeader, inputClass } from '../components/ui'
 import { JURISDICTION_NAME, TRIAGE_HELP } from '../model/catalog'
 import { assignParcels, instantiateCase } from '../model/rules'
 import { JURISDICTIONS, type CountBand, type Jurisdiction, type LegalEntity, type Organization, type Person, type TriageAnswers } from '../model/types'
@@ -141,12 +141,14 @@ export function TriageView() {
   if (step === 2) {
     const most = summary.prefilled >= Math.ceil(summary.adminItems / 2)
     return (
-      <div className="mx-auto max-w-2xl space-y-6">
-        <h1 className="text-xl font-semibold" data-testid="triage-summary">
+      <div className="mx-auto max-w-2xl">
+        <PageHeader eyebrow="Step 2 of 2 · What we'll need" title="Here is the whole picture before anyone starts" />
+        <div className="space-y-6">
+        <h2 className="text-lg font-semibold" data-testid="triage-summary">
           Based on your answers we need <strong>{summary.total}</strong> items from <strong>{summary.people}</strong>{' '}
           {summary.people === 1 ? 'person' : 'people'}.{' '}
           {most ? 'Most of what we need from you is available now.' : `${summary.prefilled} of these are already on file and only need your confirmation.`}
-        </h1>
+        </h2>
         <p className="text-base text-ink-600" data-testid="triage-reassurance">
           {summary.people === 1
             ? `All of them are yours (${summary.prefilled} already on file, just confirm them).`
@@ -183,22 +185,25 @@ export function TriageView() {
             Create case and send requests
           </Button>
         </div>
+        </div>
       </div>
     )
   }
 
   return (
-    <div className="mx-auto max-w-2xl space-y-6">
-      <div className="flex items-center gap-2">
-        <span className="text-xs text-ink-400">Demo:</span>
-        <Button size="sm" data-testid="preset-acme" onClick={() => setForm(fromFixture(ACME, 'acme'))}>
-          Prefill as Acme
+    <div className="mx-auto max-w-2xl">
+      <PageHeader eyebrow="Step 1 of 2 · About the business" title="Four questions, then we show you exactly what we'll need" />
+      <DemoBox className="mb-4 flex items-center gap-2 px-3 py-2">
+        <span className="font-medium text-warn-600">Demo</span>
+        <span>prefill as</span>
+        <Button size="sm" variant="ghost" data-testid="preset-acme" onClick={() => setForm(fromFixture(ACME, 'acme'))}>
+          Acme
         </Button>
-        <Button size="sm" data-testid="preset-northwind" onClick={() => setForm(fromFixture(NORTHWIND, 'northwind'))}>
-          Prefill as Northwind
+        <Button size="sm" variant="ghost" data-testid="preset-northwind" onClick={() => setForm(fromFixture(NORTHWIND, 'northwind'))}>
+          Northwind
         </Button>
-      </div>
-      <div className="space-y-4 rounded border border-ink-200 bg-white p-5">
+      </DemoBox>
+      <div className="space-y-5 rounded border border-ink-200 bg-white p-6">
         <Field label="Organisation legal name">
           <input className={inputClass} value={form.orgName} onChange={(e) => edit({ orgName: e.target.value })} />
         </Field>
@@ -227,10 +232,12 @@ export function TriageView() {
           </div>
         </div>
         <RadioRow label="Are you a money services business?" hint={TRIAGE_HELP.msb} value={form.isMsb ? 'Yes' : 'No'} options={['Yes', 'No']} onChange={(v) => edit({ isMsb: v === 'Yes' })} />
+        <div className="flex justify-end border-t border-ink-200 pt-4">
+          <Button variant="primary" disabled={!ready} data-testid="triage-continue" onClick={() => setStep(2)}>
+            Continue
+          </Button>
+        </div>
       </div>
-      <Button variant="primary" disabled={!ready} data-testid="triage-continue" onClick={() => setStep(2)}>
-        Continue
-      </Button>
     </div>
   )
 }
