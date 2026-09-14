@@ -55,3 +55,7 @@ Deploys automatically to GitHub Pages via `.github/workflows/deploy.yml` (Settin
 - [x] Analytics overlay fires surface-split events live, ending at `handoff_initiated`
 - [x] Consistent visual system across all screens (the external mock page *deliberately* breaks it)
 - [x] Deploy workflow to a shareable link
+
+---
+
+**Boathouse Allocation Engine** (Bond Sports PM work sample) lives in [`boathouse/`](boathouse/README.md). It is a separate Next.js app with its own package.json, spec, plan, and acceptance record.
