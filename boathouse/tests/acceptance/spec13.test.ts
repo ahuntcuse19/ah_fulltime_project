@@ -62,10 +62,12 @@ beforeAll(async () => {
 
 describe("Section 13", () => {
   it("1. seed twice: row counts and checksums identical", async () => {
-    const before = await checksums(db);
     await seed(db);
-    const after = await checksums(db);
-    expect(after).toEqual(before);
+    const first = await checksums(db);
+    await seed(db);
+    const second = await checksums(db);
+    expect(second).toEqual(first);
+    expect(first.map((c) => c.rows)).toEqual([3, 25, 57, 665, 3101, 8, 6, 0, 0]);
     await reload();
   });
 

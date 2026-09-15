@@ -107,3 +107,16 @@ All pure. Plain objects in, plain objects out.
 5. Intake and donor paragraph via Anthropic `claude-haiku-4-5-20251001`.
 6. Reports.
 7. Deploy, acceptance run against production, ACCEPTANCE.md, README.md.
+
+## LLM design (Phase 5)
+
+- Everything model-related lives in `src/llm/`; the engine never imports it and no client component does. The key is read by the SDK from `ANTHROPIC_API_KEY` on the server only.
+- Intake: one Messages call, temperature 0, max 300 output tokens, model `claude-haiku-4-5-20251001`. The system prompt states the five 7.2 rules verbatim, the output contract, a seven day date table (today first, weekday names, so "Thursday" is a lookup and not arithmetic) and a seats-per-class table. The reply is parsed as plain JSON and validated with zod against the 7.2 contract; confidence is recomputed in code from the nulls and a malformed date becomes null. Any failure (no key, network, truncation, invalid JSON, contract violation) returns the 7.3 message "Could not parse, fill in manually." and nothing else happens. The requesting organization never reaches the model.
+- Donor paragraph: temperature 0.3, max 400 tokens, the 9.2 instruction verbatim, the addressee computed in code (donor_name, else "the boathouse community"). Post-checks in code: em dashes replaced by commas, and one regeneration when the draft is outside 90 to 130 words; the draft is then returned for editing. Saving goes to `boat_report_note` (A3) and rejects text containing an em dash.
+- Each call logs one JSON line (feature, model, temperature, tokens, latency, stop reason, error) and never the key, the org or the request text.
+- `scripts/eval-intake.ts` runs eight phrasings against the live model and prints a pass table; acceptance test 8 runs live through the deployed route when `ACCEPTANCE_BASE_URL` is set, otherwise through `parseIntake` when `ANTHROPIC_API_KEY` is set, and is skipped (never passed) without either.
+
+## Status
+
+- Phases 1 to 5 committed on `claude/gallant-cray-s8ex8y`. Unit suite: 52 tests. Acceptance tests 1 to 7, 9 and 10 observed locally against a Postgres plus PostgREST stack seeded by `npm run seed`; test 8 needs an Anthropic key, which this build session does not hold, so it is recorded as not observed until it runs on Vercel.
+- Next: Phase 6 report verification by hand against the database, then Phase 7 (ACCEPTANCE.md, README.md, Vercel deploy, acceptance run against production).
