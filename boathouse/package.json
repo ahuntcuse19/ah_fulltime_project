@@ -8,7 +8,7 @@
     "start": "next start",
     "typecheck": "tsc --noEmit",
     "test": "vitest run src",
-    "test:acceptance": "vitest run tests/acceptance --config vitest.acceptance.config.ts",
+    "test:acceptance": "vitest run tests/acceptance --config vitest.acceptance.config.mts",
     "seed": "tsx scripts/seed.ts",
     "screenshots": "tsx scripts/screenshots.ts"
   },
