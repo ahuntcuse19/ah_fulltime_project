@@ -184,7 +184,7 @@ export function utilizationByOrg(
       total,
       share: houseTotal === 0 ? null : (100 * total) / houseTotal,
       annual_fee_cents: org.annual_fee_cents,
-      fee_per_session_out_cents: total === 0 ? null : org.annual_fee_cents / total,
+      fee_per_session_out_cents: total === 0 ? null : roundHalfUp(org.annual_fee_cents / total, 0),
     };
   });
 }

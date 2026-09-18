@@ -8,8 +8,9 @@
     "start": "next start",
     "typecheck": "tsc --noEmit",
     "test": "vitest run src",
-    "test:acceptance": "vitest run tests/acceptance --config vitest.acceptance.config.ts",
+    "test:acceptance": "vitest run tests/acceptance --config vitest.acceptance.config.mts",
     "seed": "tsx scripts/seed.ts",
+    "seed:sql": "tsx scripts/seed-sql.ts",
     "screenshots": "tsx scripts/screenshots.ts"
   },
   "dependencies": {
@@ -18,7 +19,8 @@
     "next": "15.5.25",
     "react": "19.3.0",
     "react-dom": "19.3.0",
-    "uuid": "^14.0.2"
+    "uuid": "^14.0.2",
+    "zod": "^4.6.5"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.3.3",
