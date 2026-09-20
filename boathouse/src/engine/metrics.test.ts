@@ -104,6 +104,23 @@ describe("8.1 definitions", () => {
 });
 
 describe("8.2 and 8.5", () => {
+  it("rounds fee per session-out half up to a whole cent", () => {
+    const college = org({ id: "college", priority_tier: 1, annual_fee_cents: 1000 });
+    const house = asset("shell_8+", "intermediate", 2016, { id: "house" });
+    const oar = asset("oar_set_sweep", "novice", 2021, { id: "oar" });
+    const four = asset("shell_4+", "intermediate", 2016, { id: "four" });
+    const s1 = session("college", "2026-03-02", "AM1", "intermediate", 12, { id: "s1" });
+    const allocs = [
+      allocation("s1", "house", "priority", true),
+      allocation("s1", "four", "priority", true),
+      allocation("s1", "oar", "priority", true),
+    ];
+    const rows = utilizationByOrg([college], allocs, [s1], [house, four, oar]);
+    expect(rows[0]!.total).toBe(3);
+    expect(rows[0]!.fee_per_session_out_cents).toBe(333);
+    expect(formatDollars(rows[0]!.fee_per_session_out_cents!)).toBe("$3.33");
+  });
+
   it("splits owned and borrowed, sums to the approved total, and computes fee per session-out", () => {
     const college = org({ id: "college", priority_tier: 1, annual_fee_cents: 3_600_000 });
     const club = org({ id: "club", priority_tier: 2, annual_fee_cents: 1_800_000 });
